@@ -154,6 +154,20 @@ app.get('/fedlandsGeoJsonByStateOwnerCode/:state/:owner_code', function* (req, r
     res.send(fedlandsGeoJsonByStateOwnerCode.rows[0].row_to_json);
 });
 
+//http://127.0.0.1:8641/fedlandsOwnerCodes
+app.get('/fedlandsOwnerCodes', function* (req, res) {
+
+    const ownercodes = yield knex('fedland')
+      .distinct('owner_code')
+      .whereNotNull('owner_code')
+      .select()
+
+    if (!ownercodes) {
+      throwNotFound();
+    }
+    res.send(ownercodes);
+});
+
 // Error handling.
 app.use((err, req, res, next) => {
   if (err) {
