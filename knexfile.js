@@ -4,10 +4,9 @@ var hostname = os.hostname();
 var type = os.type();
 
 //display the host computer name
-console.log('os.hostname(): ' + os.hostname());
+//console.log('os.hostname(): ' + os.hostname());
 //display the os type (Linux, Windows, etc.)
-console.log('os.type(): ' + os.type());
-console.log();
+//console.log('os.type(): ' + os.type());
 
 //node is not being run locally.
 //port 15432 on the host is forwarded to 5432 on the vm

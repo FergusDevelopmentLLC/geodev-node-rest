@@ -4,11 +4,14 @@ const Knex = require('knex');
 const express = require('express');
 const Promise = require('bluebird');
 const bodyParser = require('body-parser');
+const fs = require("fs");
+
 const knexConfig = require('./knexfile');
 const Model = require('objection').Model;
 
 const Weather = require('./models/Weather');
 const Fedland = require('./models/Fedland');
+const Owner = require('./models/Owner');
 
 // Adds yield support for express router.
 require('express-yields')
@@ -28,13 +31,80 @@ const app = express()
 
 //Add headers to allow access to server from outside..
 //https://community.c9.io/t/setting-up-blog-with-angular-error-no-access-control-allow-origin-header-is-present-on-the-requested-resource/5975
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');// Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');// Request methods you wish to allow
-  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');// Request headers you wish to allow
-  res.setHeader('Access-Control-Allow-Credentials', true);// Set to true if you need the website to include cookies in the requests sent to the API (e.g. in case you use sessions)
-  next();
+// app.use(function (req, res, next) {
+//   res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');// Website you wish to allow to connect
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');// Request methods you wish to allow
+//   res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');// Request headers you wish to allow
+//   res.setHeader('Access-Control-Allow-Credentials', true);// Set to true if you need the website to include cookies in the requests sent to the API (e.g. in case you use sessions)
+//   next();
+// });
+
+//http://127.0.0.1:8641/
+app.get('/', function* (req, res) {
+  var html = fs.readFileSync("index.html", "utf8");
+  res.write(html);
+  res.end();
 });
+
+app.get('/data/owners.json', function* (req, res) {
+  var json = fs.readFileSync("data/owners.json", "utf8");
+  res.write(json);
+  res.end();
+});
+
+app.get('/data/NPS.geojson', function* (req, res) {
+  var geojson = fs.readFileSync("data/NPS.geojson", "utf8");
+  res.write(geojson);
+  res.end();
+});
+
+app.get('/data/BLM.geojson', function* (req, res) {
+  var geojson = fs.readFileSync("data/BLM.geojson", "utf8");
+  res.write(geojson);
+  res.end();
+});
+
+app.get('/data/DOD.geojson', function* (req, res) {
+  var geojson = fs.readFileSync("data/DOD.geojson", "utf8");
+  res.write(geojson);
+  res.end();
+});
+
+app.get('/data/FS.geojson', function* (req, res) {
+  var geojson = fs.readFileSync("data/FS.geojson", "utf8");
+  res.write(geojson);
+  res.end();
+});
+
+app.get('/data/FWS.geojson', function* (req, res) {
+  var geojson = fs.readFileSync("data/FWS.geojson", "utf8");
+  res.write(geojson);
+  res.end();
+});
+
+app.get('/data/PRI.geojson', function* (req, res) {
+  var geojson = fs.readFileSync("data/PRI.geojson", "utf8");
+  res.write(geojson);
+  res.end();
+});
+
+app.get('/data/BOR.geojson', function* (req, res) {
+  var geojson = fs.readFileSync("data/BOR.geojson", "utf8");
+  res.write(geojson);
+  res.end();
+});
+
+app.get('/data/TVA.geojson', function* (req, res) {
+  var geojson = fs.readFileSync("data/TVA.geojson", "utf8");
+  res.write(geojson);
+  res.end();
+});
+
+// app.get('/css/bootstrap-switch.css', function* (req, res) {
+//   var css = fs.readFileSync("css/bootstrap-switch.css", "utf8");
+//   res.write(css);
+//   res.end();
+// });
 
 //http://127.0.0.1:8641/weathers GET
 app.get('/weathers', function* (req, res) {
@@ -85,6 +155,9 @@ app.get('/fedlands/:id', function* (req, res) {
   res.send(fedland);
 });
 
+//default number of places for AsGeoJson, lower number, less data, faster load time. Don't go above 15
+const asGeoJsonPrec = 3;
+
 //http://127.0.0.1:8641/fedlandsGeoJson/5761 GET (5761 is Yellowstone National Park)
 app.get('/fedlandsGeoJson/:id', function* (req, res) {
 
@@ -92,11 +165,13 @@ app.get('/fedlandsGeoJson/:id', function* (req, res) {
 
   var sql = "SELECT row_to_json(fc) FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features FROM (";
   sql +=    "SELECT 'Feature' As type, ";
-  sql +=    "	ST_AsGeoJSON(lg.geom, 4)::json As geometry,";
+  sql +=    "	ST_AsGeoJSON(lg.geom, #asGeoJsonPrec#)::json As geometry,";
   sql +=    "	row_to_json(lp) AS properties ";
   sql +=    "FROM fedland AS lg ";
-  sql +=    "INNER JOIN ( SELECT id, owner_code, owner, name, state, state_fips FROM fedland ) As lp ON lg.id = lp.id and lp.id = #req.params.id# ) AS f )  AS fc;";
+  sql +=    "INNER JOIN ( SELECT id, owner_code, owner, name, state, state_fips FROM fedland ) As lp ON lg.id = lp.id and ";
+  sql +=    "lp.id = #req.params.id# ) AS f ) AS fc;";
 
+  sql = sql.replace('#asGeoJsonPrec#', asGeoJsonPrec);
   sql = sql.replace('#req.params.id#', req.params.id);
 
   const fedlandGeoJson = yield knex
@@ -114,11 +189,13 @@ app.get('/fedlandsGeoJsonByOwnerCode/:owner_code', function* (req, res) {
 
   var sql = "SELECT row_to_json(fc) FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features FROM (";
   sql +=    "SELECT 'Feature' As type, ";
-  sql +=    "	ST_AsGeoJSON(lg.geom, 4)::json As geometry,";
+  sql +=    "	ST_AsGeoJSON(lg.geom, #asGeoJsonPrec#)::json As geometry,";
   sql +=    "	row_to_json(lp) AS properties ";
   sql +=    "FROM fedland AS lg ";
-  sql +=    "INNER JOIN ( SELECT id, owner_code, owner, name, state, state_fips FROM fedland ) As lp ON lg.id = lp.id and lp.owner_code = '#req.params.owner_code#' ) AS f )  AS fc;";
+  sql +=    "INNER JOIN ( SELECT id, owner_code, owner, name, state, state_fips FROM fedland ) As lp ON lg.id = lp.id and ";
+  sql +=    "lp.owner_code = '#req.params.owner_code#' ) AS f ) AS fc;";
 
+  sql = sql.replace('#asGeoJsonPrec#', asGeoJsonPrec);
   sql = sql.replace('#req.params.owner_code#', req.params.owner_code);
 
   const fedlandsGeoJsonByOwnerCode = yield knex
@@ -136,11 +213,13 @@ app.get('/fedlandsGeoJsonByStateOwnerCode/:state/:owner_code', function* (req, r
 
   var sql = "SELECT row_to_json(fc) FROM ( SELECT 'FeatureCollection' As type, array_to_json(array_agg(f)) As features FROM (";
   sql +=    "SELECT 'Feature' As type, ";
-  sql +=    "	ST_AsGeoJSON(lg.geom, 4)::json As geometry,";
+  sql +=    "	ST_AsGeoJSON(lg.geom, #asGeoJsonPrec#)::json As geometry,";
   sql +=    "	row_to_json(lp) AS properties ";
   sql +=    "FROM fedland AS lg ";
-  sql +=    "INNER JOIN ( SELECT id, owner_code, owner, name, state, state_fips FROM fedland ) As lp ON lg.id = lp.id and lp.owner_code = '#req.params.owner_code#' and lp.state = '#req.params.state#' ) AS f )  AS fc;";
+  sql +=    "INNER JOIN ( SELECT id, owner_code, owner, name, state, state_fips FROM fedland ) As lp ON lg.id = lp.id and ";
+  sql +=    "lp.owner_code = '#req.params.owner_code#' and lp.state = '#req.params.state#' ) AS f ) AS fc;";
 
+  sql = sql.replace('#asGeoJsonPrec#', asGeoJsonPrec);
   sql = sql.replace('#req.params.owner_code#', req.params.owner_code);
   sql = sql.replace('#req.params.state#', req.params.state);
 
@@ -165,7 +244,51 @@ app.get('/fedlandsOwnerCodes', function* (req, res) {
     if (!ownercodes) {
       throwNotFound();
     }
+
     res.send(ownercodes);
+});
+
+//http://127.0.0.1:8641/owners
+app.get('/owners', function* (req, res) {
+
+    const owners = yield knex('owner')
+      .select()
+      .orderBy('orderby')
+
+    if (!owners) {
+      throwNotFound();
+    }
+
+    res.send(owners);
+});
+
+//http://127.0.0.1:8641/owners POST
+app.post('/owners', function* (req, res) {
+
+  const owner = yield Owner
+    .query()
+    .allowInsert()
+    .insertGraph(req.body);
+
+  res.send(owner);
+});
+
+//http://127.0.0.1:8641/owners/1 PATCH
+app.patch('/owners/:id', function* (req, res) {
+  const owner = yield Owner
+    .query()
+    .patchAndFetchById(req.params.id, req.body);
+
+  res.send(owner);
+});
+
+//http://127.0.0.1:8641/owners/1 DELETE
+app.delete('/owners/:id', function* (req, res) {
+  const owner = yield Owner
+    .query()
+    .deleteById(req.params.id);
+
+  res.send({});
 });
 
 // Error handling.
