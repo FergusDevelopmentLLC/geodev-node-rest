@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8 />
+    <title>United States Federal Lands</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+
+    <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+          margin: 0;
+          padding: 0;
+          font-family: Francois One, sans-serif;
+        }
+        h1 {
+          display: inline-block;
+          margin-right: 20px;
+          color: #001323;
+        }
+        h2 {
+          display: inline-block;
+          color: #001323;
+        }
+        p {
+          font-size: 1em;
+          color: #001323;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+        #legend {
+          position:absolute;
+          z-index: 401;
+          bottom:20px;
+          left:20px;
+          height:320px;
+          width: 280px;
+          background-color:white;
+          padding:7px;
+          border-radius: 5px;
+s        }
+        #legend fieldset {
+          border-radius: 5px;
+          border: 1px solid #bbb;
+        }
+        #legend div {
+          padding:10px 0 10px 0;
+          text-align: center;
+          font-size: 1.5em;
+        }
+        #legend div button {
+          margin: 0 auto;
+          display: block;
+        }
+        #startover {
+          font-size: .5em;
+        }
+    </style>
+</head>
+
+<body>
+  <div id="legend">
+    <div>U.S. Federal Lands</div>
+    <fieldset>
+      <legend> Select Owner </legend>
+      <span id='ownerCheckboxes'/>
+    </fieldset>
+    <div>
+      <button type="button" name="database_local" id="database_local">Currently using static geoson data<br>click me to use database</button>
+    </div>
+
+  </div>
+
+    <div id='map'></div>
+
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="http://spin.js.org/spin.js" ></script>
+
+    <script>
+
+      var spinner;
+
+      var source = 'local';
+
+      var map = L.map('map', {
+        center: [39.094145, -105.683906],
+        zoom: 4,
+      });
+
+      var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      var layerGroupsDisplayed = {};
+
+      function init() {
+        layerGroupsDisplayed = {};
+        map.eachLayer(function (layer) {
+          if(!layer._url){
+            map.removeLayer(layer);
+            $('input[type=checkbox]').each(function(){
+              this.checked = false;
+            });
+          }
+        });
+        var jsonUrl = getOwnersUrl();
+        $.getJSON(jsonUrl, function (data) {
+          populateLegend (data);
+        });
+      }
+
+      function populateLegend(data){
+        var checkboxes = '';
+        for (var owner in data) {
+          checkboxes += "<input type='checkbox' name='owner_code' id='" + data[owner].owner_code + "' value='" + data[owner].id + "' color='" + data[owner].color + "' owner_code='" + data[owner].owner_code + "' owner='" + data[owner].owner + "'><label for='" + data[owner].owner_code + "'><span style='color:" + data[owner].color + "'>" + data[owner].owner + "</span></label></br>";
+        }
+        $('#ownerCheckboxes').html(checkboxes);
+        handleCheckboxClicks();
+        $("#NPS").click();
+      };
+
+      function getLayerGroupFor(owner_code, strokeColor) {
+        //console.log("from api");
+        var lgFromApi = new L.layerGroup();
+        var geoJsonUrl = getGeoJsonUrl(owner_code);
+        $('.spinner').show();
+        $.getJSON(geoJsonUrl, function(data) {
+          $('.spinner').hide();
+          var dataLayer = L.geoJson(data, {
+            style: function(feature) {
+              return {color: strokeColor, fillColor: strokeColor, stroke: true, strokefillOpacity: .4};
+            }
+          });
+          lgFromApi.addLayer(dataLayer);
+        });
+        return lgFromApi;
+      }
+
+      function handleCheckboxClicks() {
+        $("input[type='checkbox'][name='owner_code']").change(function() {
+          var id = $(this).attr('value');
+          var owner_code = $(this).attr('owner_code');
+          var owner = $(this).attr('owner');
+          var strokeColor = $(this).attr('color');
+          if(this.checked) {
+            if(layerGroupsDisplayed[owner_code]) { //check layerGroupsToDisplay first, if not there then get it from the API
+              //console.log("from layerGroupsDisplayed");
+              layerGroupsDisplayed[owner_code].lg.addTo(map);
+            }
+            else {
+              var lg = getLayerGroupFor(owner_code, strokeColor);
+              lg.addTo(map);
+              //console.log(lg._leaflet_id);
+              layerGroupsDisplayed[owner_code] = {
+                leafletid: lg._leaflet_id, lg: lg
+              };
+            };
+          }
+          else {
+            if(map.hasLayer(layerGroupsDisplayed[owner_code].lg))
+              map.removeLayer(layerGroupsDisplayed[owner_code].lg);
+          }
+        })
+      }
+
+      function getGeoJsonUrl(owner_code) {
+        var url = "http://127.0.0.1:8641/data/" + owner_code + ".geojson";
+        if(source == 'local'){
+          url = "http://127.0.0.1:8641/data/" + owner_code + ".geojson";
+          source = 'local';
+          console.log('Map data geojson source is local file: ' + url);
+        }
+        else if(source == 'database'){
+          url = "http://127.0.0.1:8641/fedlandsGeoJsonByOwnerCode/" + owner_code;
+          source = 'database';
+          console.log('Map data geojson source is api: ' + url);
+        }
+        return url;
+      }
+
+      function getOwnersUrl(owner_code) {
+        var url = "http://127.0.0.1:8641/data/owners.json";
+        if(source == 'local'){
+          url = "http://127.0.0.1:8641/data/owners.json";
+          source = 'local';
+          console.log('U.S. Federal lands source is local file: ' + url);
+        }
+        else if(source == 'database'){
+          url = "http://127.0.0.1:8641/owners";
+          source = 'database';
+          console.log('U.S. Federal lands source is api: ' + url);
+        }
+        return url;
+      }
+
+      $(document).ready(function() {
+
+        init();
+
+        $('#database_local').click(function() {
+          if($('#database_local').html().includes('click me to use static geoson data')){
+            $('#database_local').html('Currently using static geoson data<br>click me to use database');
+            source = 'local';
+          }
+          else if($('#database_local').html().includes('click me to use database')){
+            $('#database_local').html('Currently using database<br>click me to use static geoson data');
+            source = 'database';
+          }
+          init();
+        });
+
+        var target = document.getElementById('map');
+
+        var opts = {
+            lines: 13 // The number of lines to draw
+          , length: 28 // The length of each line
+          , width: 14 // The line thickness
+          , radius: 42 // The radius of the inner circle
+          , scale: 1 // Scales overall size of the spinner
+          , corners: 1 // Corner roundness (0..1)
+          , color: '#FFF' // #rgb or #rrggbb or array of colors
+          , opacity: 0.25 // Opacity of the lines
+          , rotate: 0 // The rotation offset
+          , direction: 1 // 1: clockwise, -1: counterclockwise
+          , speed: 1 // Rounds per second
+          , trail: 60 // Afterglow percentage
+          , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+          , zIndex: 2e9 // The z-index (defaults to 2000000000)
+          , className: 'spinner' // The CSS class to assign to the spinner
+          , top: '50%' // Top position relative to parent
+          , left: '50%' // Left position relative to parent
+          , shadow: false // Whether to render a shadow
+          , hwaccel: false // Whether to use hardware acceleration
+          , position: 'absolute' // Element positioning
+        };
+
+        spinner = new Spinner(opts).spin(target);
+
+      });
+
+    </script>
+</body>
+</html>
