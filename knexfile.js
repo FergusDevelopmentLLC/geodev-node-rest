@@ -1,24 +1,9 @@
-var os = require('os');
-
-var hostname = os.hostname();
-var type = os.type();
-
-//display the host computer name
-//console.log('os.hostname(): ' + os.hostname());
-//display the os type (Linux, Windows, etc.)
-//console.log('os.type(): ' + os.type());
-
-//node is not being run locally.
-//port 15432 on the host is forwarded to 5432 on the vm
-var port = 5432;
-if (hostname !== "geodev") { port = 15432; }
-
 module.exports = {
   development: {
     client: 'postgresql',
     connection: {
       host : '127.0.0.1',
-      port: port,
+      port: 15432,
       user : 'geodevdb',
       password : 'admin123',
       database : 'geodevdb'
@@ -31,7 +16,11 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection: {
-      database: 'example'
+      host : '127.0.0.1',
+      port: 5432,
+      user : 'geodevdb',
+      password : 'Gmcb1p4y_',
+      database : 'geodevdb'
     },
     pool: {
       min: 2,

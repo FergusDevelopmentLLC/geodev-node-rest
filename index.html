@@ -172,14 +172,14 @@ s        }
       }
 
       function getGeoJsonUrl(owner_code) {
-        var url = "http://127.0.0.1:8641/data/" + owner_code + ".geojson";
+        var url = "/data/" + owner_code + ".geojson";
         if(source == 'local'){
-          url = "http://127.0.0.1:8641/data/" + owner_code + ".geojson";
+          url = "/data/" + owner_code + ".geojson";
           source = 'local';
           console.log('Map data geojson source is local file: ' + url);
         }
         else if(source == 'database'){
-          url = "http://127.0.0.1:8641/fedlandsGeoJsonByOwnerCode/" + owner_code;
+          url = "/fedlandsGeoJsonByOwnerCode/" + owner_code;
           source = 'database';
           console.log('Map data geojson source is api: ' + url);
         }
@@ -187,14 +187,14 @@ s        }
       }
 
       function getOwnersUrl(owner_code) {
-        var url = "http://127.0.0.1:8641/data/owners.json";
+        var url = "/data/owners.json";
         if(source == 'local'){
-          url = "http://127.0.0.1:8641/data/owners.json";
+          url = "/data/owners.json";
           source = 'local';
           console.log('U.S. Federal lands source is local file: ' + url);
         }
         else if(source == 'database'){
-          url = "http://127.0.0.1:8641/owners";
+          url = "/owners";
           source = 'database';
           console.log('U.S. Federal lands source is api: ' + url);
         }
