@@ -35,6 +35,12 @@ app.get('/data/owners.json', function (req, res) {
   res.sendFile(path.resolve('data/owners.json'));
 });
 
+app.get('/data/owners.json', function (req, res) {
+  res.sendFile(path.resolve('data/owners.json'));
+});
+
+//root@geodev-ubuntu-512mb-nyc3-01:~/app/geodev-node-rest/data# tar -cf fedland_geojson.tar.gz *.geojson
+
 app.get('/owners', function* (req, res) {
 
   const owners = yield Owner

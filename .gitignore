@@ -1,4 +1,4 @@
 node_modules/
 data/*.geojson
-data/*.gz
+data/fedland_geojson.tar.gz
 knexfile.js
