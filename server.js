@@ -39,7 +39,9 @@ app.get('/data/owners.json', function (req, res) {
   res.sendFile(path.resolve('data/owners.json'));
 });
 
-//root@geodev-ubuntu-512mb-nyc3-01:~/app/geodev-node-rest/data# tar -cf fedland_geojson.tar.gz *.geojson
+app.get('/data/fedland_geojson.tar.gz', function (req, res) {
+  res.sendFile(path.resolve('data/fedland_geojson.tar.gz'));
+});
 
 app.get('/owners', function* (req, res) {
 
