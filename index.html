@@ -86,8 +86,6 @@
 
       var spinner;
 
-      var source = 'local';
-
       var map = L.map('map', {
         center: [39.094145, -105.683906],
         zoom: 4,
@@ -100,6 +98,7 @@
       }).addTo(map);
 
       var layerGroupsDisplayed = {};
+      var apisource = 'local';
 
       function populateLegend(data){
         var checkboxes = '';
@@ -157,14 +156,14 @@
 
       function getGeoJsonUrl(owner_code) {
         var url = "/data/" + owner_code + ".geojson";
-        if(source == 'local'){
+        if(apisource == 'local'){
           url = "/data/" + owner_code + ".geojson";
-          source = 'local';
+          apisource = 'local';
           console.log('Map data geojson source is local file: ' + url);
         }
-        else if(source == 'database'){
+        else if(apisource == 'database'){
           url = "/fedlandsGeoJsonByOwnerCode/" + owner_code;
-          source = 'database';
+          apisource = 'database';
           console.log('Map data geojson source is api: ' + url);
         }
         return url;
@@ -172,14 +171,14 @@
 
       function getOwnersUrl(owner_code) {
         var url = "/data/owners.json";
-        if(source == 'local'){
+        if(apisource == 'local'){
           url = "/data/owners.json";
-          source = 'local';
+          apisource = 'local';
           console.log('U.S. Federal lands source is local file: ' + url);
         }
-        else if(source == 'database'){
+        else if(apisource == 'database'){
           url = "/owners";
-          source = 'database';
+          apisource = 'database';
           console.log('U.S. Federal lands source is api: ' + url);
         }
         return url;
