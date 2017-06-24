@@ -188,11 +188,11 @@
         $('#database_local').click(function() {
           if($('#database_local').html().includes('click me to use static geoson data')){
             $('#database_local').html('Currently using static geoson data<br>click me to use database');
-            source = 'local';
+            apisource = 'local';
           }
           else if($('#database_local').html().includes('click me to use database')){
             $('#database_local').html('Currently using database<br>click me to use static geoson data');
-            source = 'database';
+            apisource = 'database';
           }
           init();
         });
