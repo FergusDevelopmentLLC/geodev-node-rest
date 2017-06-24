@@ -14,9 +14,12 @@ module.exports = {
     }
   },
   production: {
-    client: 'postgresql',
     connection: {
-      database: 'example'
+      host : '127.0.0.1',
+      port: '5432',
+      user : 'geodevdb',
+      password : 'Gmcb1p4y_',
+      database : 'geodevdb'
     },
     pool: {
       min: 2,
