@@ -15,10 +15,11 @@ exports.down = function (knex) {
 };
 
 
+/*
+//after running knex migrate:latest, populate weather from weather_v2
 
-// after running knex migrate:latest, populate weather from weather_v2
+INSERT INTO weather (city, temp_lo, temp_hi, date)
+SELECT city, temp_lo, temp_hi, date FROM weather_v2;
 
-// INSERT INTO weather (city, temp_lo, temp_hi, date)
-// SELECT city, temp_lo, temp_hi, date FROM weather_v2;
-//
-// drop table weather_v2;
+drop table weather_v2;
+*/

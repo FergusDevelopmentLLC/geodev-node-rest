@@ -3,7 +3,7 @@ module.exports = {
     client: 'postgresql',
     connection: {
       host : '127.0.0.1',
-      port: 15432,
+      port: '15432',
       user : 'geodevdb',
       password : 'admin123',
       database : 'geodevdb'
@@ -16,11 +16,7 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection: {
-      host : '127.0.0.1',
-      port: 5432,
-      user : 'geodevdb',
-      password : 'Gmcb1p4y_',
-      database : 'geodevdb'
+      database: 'example'
     },
     pool: {
       min: 2,
