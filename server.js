@@ -27,21 +27,7 @@ const app = express()
 
 Model.knex(knex);// Bind all Models to a knex instance.
 
-app.get('/', function (req, res) {
-  res.sendFile(path.resolve('index.html'));
-});
-
-app.get('/data/owners.json', function (req, res) {
-  res.sendFile(path.resolve('data/owners.json'));
-});
-
-app.get('/data/owners.json', function (req, res) {
-  res.sendFile(path.resolve('data/owners.json'));
-});
-
-app.get('/data/fedland_geojson.tar.gz', function (req, res) {
-  res.sendFile(path.resolve('data/fedland_geojson.tar.gz'));
-});
+app.use(express.static(__dirname + "/public")); //allows serving of static files in public folder
 
 app.get('/owners', function* (req, res) {
 
@@ -52,31 +38,6 @@ app.get('/owners', function* (req, res) {
     .orderBy('orderby')
 
   res.send(owners);
-});
-
-app.get('/data/BLM.geojson', function (req, res) {
-  res.sendFile(path.resolve('data/BLM.geojson'));
-});
-app.get('/data/BOR.geojson', function (req, res) {
-  res.sendFile(path.resolve('data/BOR.geojson'));
-});
-app.get('/data/DOD.geojson', function (req, res) {
-  res.sendFile(path.resolve('data/DOD.geojson'));
-});
-app.get('/data/FS.geojson', function (req, res) {
-  res.sendFile(path.resolve('data/FS.geojson'));
-});
-app.get('/data/FWS.geojson', function (req, res) {
-  res.sendFile(path.resolve('data/FWS.geojson'));
-});
-app.get('/data/NPS.geojson', function (req, res) {
-  res.sendFile(path.resolve('data/NPS.geojson'));
-});
-app.get('/data/PRI.geojson', function (req, res) {
-  res.sendFile(path.resolve('data/PRI.geojson'));
-});
-app.get('/data/TVA.geojson', function (req, res) {
-  res.sendFile(path.resolve('data/TVA.geojson'));
 });
 
 app.get('/fedlands', function* (req, res) {
