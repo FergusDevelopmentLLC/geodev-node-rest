@@ -9,25 +9,13 @@
 
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
-
+    <link href='http://getbootstrap.com/dist/css/bootstrap.css' rel='stylesheet' type='text/css'>
     <style>
         body {
           margin: 0;
           padding: 0;
           font-family: Francois One, sans-serif;
-        }
-        h1 {
-          display: inline-block;
-          margin-right: 20px;
-          color: #001323;
-        }
-        h2 {
-          display: inline-block;
-          color: #001323;
-        }
-        p {
-          font-size: 1em;
-          color: #001323;
+          font-size: 15px;
         }
         html, body, #map {
             height: 100%;
@@ -36,44 +24,36 @@
         #legend {
           position:absolute;
           z-index: 401;
-          bottom:20px;
-          left:20px;
-          height:320px;
-          width: 280px;
-          background-color:white;
-          padding:7px;
+          bottom: 20px;
+          left: 20px;
+          width: 251px;
+          background-color: #fff;
+          padding:10px;
           border-radius: 5px;
         }
-        #legend fieldset {
-          border-radius: 5px;
-          border: 1px solid #bbb;
+
+        #owner-checkboxes-wrapper {
+          margin: 0 0 5px 0;
         }
-        #legend div {
-          padding:10px 0 10px 0;
+
+        h4 {
+          margin: 0 0 10px 0;
           text-align: center;
-          font-size: 1.5em;
-        }
-        #legend div button {
-          margin: 0 auto;
-          display: block;
-        }
-        #startover {
-          font-size: .5em;
         }
     </style>
 </head>
 
 <body>
   <div id="legend">
-    <div>U.S. Federal Lands</div>
-    <fieldset>
-      <legend> Select Owner </legend>
+    <h4>U.S. Federal Lands</h4>
+    <div id="owner-checkboxes-wrapper">
       <span id='ownerCheckboxes'/>
-    </fieldset>
-    <div>
-      <button type="button" name="database_local" id="database_local">Currently using static geoson data<br>click me to use database</button>
     </div>
-
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn btn-primary active"><input type="radio" name="datasource" id="geojson" value="geojson" />GEOJSON</label>
+      <label class="btn btn-primary"><input type="radio" name="datasource" id="postgres" value="postgres" />POSTGRES</label>
+      <label class="btn btn-primary"><input type="radio" name="datasource" id="mongo" value="mongo" />MONGO</label>
+    </div>
   </div>
 
     <div id='map'></div>
@@ -97,13 +77,13 @@
       }).addTo(map);
 
       var layerGroupsDisplayed = {};
-      var apisource = 'local';
+      var apisource = 'geojson';
       var spinner;
 
       function populateLegend(data){
         var checkboxes = '';
         for (var owner in data) {
-          checkboxes += "<input type='checkbox' name='owner_code' id='" + data[owner].owner_code + "' value='" + data[owner].id + "' color='" + data[owner].color + "' owner_code='" + data[owner].owner_code + "' owner='" + data[owner].owner + "'><label for='" + data[owner].owner_code + "'><span style='color:" + data[owner].color + "'>" + data[owner].owner + "</span></label></br>";
+          checkboxes += "<input type='checkbox' name='owner_code' id='" + data[owner].owner_code + "' value='" + data[owner].id + "' color='" + data[owner].color + "' owner_code='" + data[owner].owner_code + "' owner='" + data[owner].owner + "'> <label for='" + data[owner].owner_code + "'><span style='color:" + data[owner].color + "'>" + data[owner].owner + "</span></label></br>";
         }
         $('#ownerCheckboxes').html(checkboxes);
         handleCheckboxClicks();
@@ -156,45 +136,66 @@
 
       function getGeoJsonUrl(owner_code) {
         var url = "data/" + owner_code + ".geojson";
-        if(apisource == 'local'){
+        if(apisource == 'geojson'){
           url = "data/" + owner_code + ".geojson";
-          apisource = 'local';
-          console.log('Map data geojson source is local file: ' + url);
+          apisource = 'geojson';
+          console.log('Map data geojson source is geojson file: ' + url);
         }
-        else if(apisource == 'database'){
+        else if(apisource == 'postgres'){
           url = "/fedlandsP/forOwnerCode/" + owner_code;
-          apisource = 'database';
-          console.log('Map data geojson source is api: ' + url);
+          apisource = 'postgres';
+          console.log('Map data geojson source is postgres api: ' + url);
+        }
+        else if(apisource == 'mongo'){
+          url = "/fedlandsM/forOwnerCode/" + owner_code;
+          apisource = 'mongo';
+          console.log('Map data geojson source is mongo api: ' + url);
         }
         return url;
       }
 
       function getOwnersUrl(owner_code) {
         var url = "data/owners.json";
-        if(apisource == 'local'){
+        if(apisource == 'geojson'){
           url = "data/owners.json";
-          apisource = 'local';
+          apisource = 'geojson';
           console.log('U.S. Federal lands source is local file: ' + url);
         }
-        else if(apisource == 'database'){
+        else if(apisource == 'postgres'){
           url = "/ownersP";
-          apisource = 'database';
-          console.log('U.S. Federal lands source is api: ' + url);
+          apisource = 'postgres';
+          console.log('U.S. Federal lands source is postgres api: ' + url);
+        }
+        else if(apisource == 'mongo'){
+          url = "/ownersM";
+          apisource = 'mongo';
+          console.log('Map data geojson source is mongo api: ' + url);
         }
         return url;
       }
 
-      function handleDatabaseLocalClick() {
-        $('#database_local').click(function() {
-          if($('#database_local').html().includes('click me to use static geoson data')){
-            $('#database_local').html('Currently using static geoson data<br>click me to use database');
-            apisource = 'local';
-          }
-          else if($('#database_local').html().includes('click me to use database')){
-            $('#database_local').html('Currently using database<br>click me to use static geoson data');
-            apisource = 'database';
-          }
+      function handleDataSourceClick() {
+        $('input[type=radio][name=datasource]').change(function() {
           init();
+          $(this).parent().attr('class', 'btn btn-primary active');
+          if(this.value == "geojson"){
+            //console.log('geojson');
+            apisource = "geojson";
+            $(this).parent().next().attr('class', 'btn btn-primary');
+            $(this).parent().next().next().attr('class', 'btn btn-primary');
+          }
+          else if (this.value == "postgres") {
+            //console.log('postgres');
+            apisource = "postgres";
+            $(this).parent().prev().attr('class', 'btn btn-primary');
+            $(this).parent().next().attr('class', 'btn btn-primary');
+          }
+          else if (this.value == "mongo") {
+            //console.log('mongo');
+            apisource = "mongo";
+            $(this).parent().prev().attr('class', 'btn btn-primary');
+            $(this).parent().prev().prev().attr('class', 'btn btn-primary');
+          }
         });
       }
 
@@ -244,12 +245,10 @@
         $.getJSON(jsonUrl, function (data) {
           populateLegend (data);
         });
-
-        handleDatabaseLocalClick();
-
       }
 
       $(document).ready(function() {
+        handleDataSourceClick();
         init();
       });
 

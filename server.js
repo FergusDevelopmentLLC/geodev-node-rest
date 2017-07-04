@@ -10,7 +10,11 @@ const Model = require('objection').Model;
 const knexConfig = require('./knexfile');
 const Knex = require('knex');
 const knex = Knex(knexConfig.development);// Initialize knex
-Model.knex(knex);// Bind all Models to a knex instance.
+Model.knex(knex);// Bind all Models to a knex instance
+
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/geodevdb');
 
 const app = express();
 
@@ -26,6 +30,11 @@ const ownersP = require('./routes/ownersP');
 const fedlandsP = require('./routes/fedlandsP');
 app.use('/ownersP', ownersP);
 app.use('/fedlandsP', fedlandsP);
+
+const ownersM = require('./routes/ownersM');
+const fedlandsM = require('./routes/fedlandsM');
+app.use('/ownersM', ownersM);
+app.use('/fedlandsM', fedlandsM);
 
 // catch 404 and forward them to error handler
 app.use((req, res, next) => {

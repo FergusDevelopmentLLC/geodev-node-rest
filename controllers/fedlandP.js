@@ -10,8 +10,7 @@ module.exports = {
       .query()
       .eager(req.query.eager)
       .skipUndefined()
-      .orderBy('id')
-      .limit(100);
+      .orderBy('id');
     res.status(200).json(fedlands);
   },
 
