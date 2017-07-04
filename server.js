@@ -52,6 +52,6 @@ app.use((req, res, next) => {
 });
 
 // Start the server
-const server = app.listen(3000, () => {
+const server = app.listen(8641, () => {
   console.log('App listening at port %s', server.address().port);
 });
