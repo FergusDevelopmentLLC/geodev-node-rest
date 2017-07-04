@@ -138,17 +138,14 @@
         var url = "data/" + owner_code + ".geojson";
         if(apisource == 'geojson'){
           url = "data/" + owner_code + ".geojson";
-          apisource = 'geojson';
           console.log('Map data geojson source is geojson file: ' + url);
         }
         else if(apisource == 'postgres'){
           url = "/fedlandsP/forOwnerCode/" + owner_code;
-          apisource = 'postgres';
           console.log('Map data geojson source is postgres api: ' + url);
         }
         else if(apisource == 'mongo'){
           url = "/fedlandsM/forOwnerCode/" + owner_code;
-          apisource = 'mongo';
           console.log('Map data geojson source is mongo api: ' + url);
         }
         return url;
@@ -158,17 +155,14 @@
         var url = "data/owners.json";
         if(apisource == 'geojson'){
           url = "data/owners.json";
-          apisource = 'geojson';
           console.log('U.S. Federal lands source is local file: ' + url);
         }
         else if(apisource == 'postgres'){
           url = "/ownersP";
-          apisource = 'postgres';
           console.log('U.S. Federal lands source is postgres api: ' + url);
         }
         else if(apisource == 'mongo'){
           url = "/ownersM";
-          apisource = 'mongo';
           console.log('Map data geojson source is mongo api: ' + url);
         }
         return url;
@@ -176,7 +170,6 @@
 
       function handleDataSourceClick() {
         $('input[type=radio][name=datasource]').change(function() {
-          init();
           $(this).parent().attr('class', 'btn btn-primary active');
           if(this.value == "geojson"){
             //console.log('geojson');
@@ -196,6 +189,7 @@
             $(this).parent().prev().attr('class', 'btn btn-primary');
             $(this).parent().prev().prev().attr('class', 'btn btn-primary');
           }
+          init();
         });
       }
 
