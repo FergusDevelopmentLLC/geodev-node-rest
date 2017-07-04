@@ -2,3 +2,4 @@ node_modules/
 public/data/*.geojson
 public/data/fedland_geojson.tar.gz
 knexfile.js
+*.lock

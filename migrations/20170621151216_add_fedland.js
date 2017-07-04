@@ -16,9 +16,3 @@ exports.down = function(knex, Promise) {
   return knex.schema
     .dropTableIfExists('fedland');
 };
-
-//after running knex migrate:latest, populate fedland from fedland_v2
-// INSERT INTO fedland (geom, owner_code, owner, name, state, state_fips)
-// SELECT geom, owner_code, owner, name, state, state_fips FROM fedland_v2;
-//
-// drop table fedland_v2;

@@ -80,11 +80,10 @@
 
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
-    <script src="http://spin.js.org/spin.js" ></script>
+    <script src="http://spin.js.org/spin.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 
     <script>
-
-      var spinner;
 
       var map = L.map('map', {
         center: [39.094145, -105.683906],
@@ -99,6 +98,7 @@
 
       var layerGroupsDisplayed = {};
       var apisource = 'local';
+      var spinner;
 
       function populateLegend(data){
         var checkboxes = '';
@@ -162,7 +162,7 @@
           console.log('Map data geojson source is local file: ' + url);
         }
         else if(apisource == 'database'){
-          url = "/fedlandsGeoJsonByOwnerCode/" + owner_code;
+          url = "/fedlandsP/forOwnerCode/" + owner_code;
           apisource = 'database';
           console.log('Map data geojson source is api: ' + url);
         }
@@ -177,7 +177,7 @@
           console.log('U.S. Federal lands source is local file: ' + url);
         }
         else if(apisource == 'database'){
-          url = "/owners";
+          url = "/ownersP";
           apisource = 'database';
           console.log('U.S. Federal lands source is api: ' + url);
         }

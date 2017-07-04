@@ -2,11 +2,11 @@
 
 const Model = require('objection').Model;
 
-class Owner extends Model {
+class FedlandP extends Model {
   // Table name is the only required property.
   static get tableName() {
-    return 'owner';
+    return 'fedland';
   }
 }
 
-module.exports = Owner;
+module.exports = FedlandP;

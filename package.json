@@ -4,19 +4,26 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "bluebird": "^3.3.5",
     "body-parser": "^1.15.1",
     "express": "^4.13.4",
-    "express-yields": "^1.0.2",
+    "express-promise-router": "^1.1.1",
+    "helmet": "^3.6.1",
+    "joi": "^10.6.0",
     "knex": "^0.12.0",
     "knex-postgis": "^0.2.2",
+    "logger": "^0.0.1",
+    "morgan": "^1.8.2",
     "objection": "^0.8.0",
     "path": "^0.12.7",
     "pg": "^6.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
   }
 }
