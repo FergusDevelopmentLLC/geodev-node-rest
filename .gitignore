@@ -4,6 +4,7 @@ public/data/fedlands.json
 public/data/owners_export.json
 public/data/*.csv
 public/data/fedland_geojson.tar.gz
+public/data/*.dump
 knexfile.js
 *.lock
-cd 
+cd
