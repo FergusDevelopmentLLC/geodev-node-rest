@@ -70,58 +70,123 @@
         zoom: 4,
       });
 
+      //console.log(map.getBounds());
+
       var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
         subdomains: 'abcd',
-        maxZoom: 19
+        minZoom: 4,
+        maxZoom: 14
       }).addTo(map);
 
-      var layerGroupsDisplayed = {};
+       var layerGroupsDisplayed = {};
       var apisource = 'geojson';
       var spinner;
 
-      function populateLegend(data){
-        var checkboxes = '';
-        for (var owner in data) {
-          checkboxes += "<input type='checkbox' name='owner_code' id='" + data[owner].owner_code + "' value='" + data[owner].id + "' color='" + data[owner].color + "' owner_code='" + data[owner].owner_code + "' owner='" + data[owner].owner + "'> <label for='" + data[owner].owner_code + "'><span style='color:" + data[owner].color + "'>" + data[owner].owner + "</span></label></br>";
-        }
-        $('#ownerCheckboxes').html(checkboxes);
-        handleCheckboxClicks();
-        $("#NPS").click();
-      };
-
       function getLayerGroupFor(owner_code, strokeColor) {
-        //console.log("from api");
+
         var lgFromApi = new L.layerGroup();
+
         var geoJsonUrl = getGeoJsonUrl(owner_code);
+
         $('.spinner').show();
-        $.getJSON(geoJsonUrl, function(data) {
-          $('.spinner').hide();
-          var dataLayer = L.geoJson(data, {
-            style: function(feature) {
-              return {color: strokeColor, fillColor: strokeColor, stroke: true, strokefillOpacity: .4};
+
+        if(geoJsonUrl == '/fedlandsPSBBOC/') {
+
+          // const reqInfo = {
+          // 	owner_code : "NPS",
+          // 	left_lng : -109.044926,
+          // 	bottom_lat : 36.999016,
+          // 	right_lng : -102.051515,
+          // 	top_lat : 41.001666,
+          // 	simplification : 1.00,
+          // 	geojson_digits : 3,
+          // 	srid : 4326
+          // };
+
+          const bounds = map.getBounds();
+          const zoom = parseInt(map.getZoom());
+
+          var simplification = 1.00;
+
+          if(zoom < 5){
+            simplification = 1.00;
+          }
+          if(zoom >= 5 && zoom < 6){
+            simplification = 0.1;
+          }
+          if(zoom >= 6 && zoom < 7){
+            simplification = 0.01;
+          }
+          if(zoom >= 7 && zoom < 8){
+            simplification = 0.005;
+          }
+          if(zoom >= 8){
+            simplification = 0.001;
+          }
+
+          //console.log('zoom level: ' + zoom);
+
+          const reqInfo = {
+          	owner_code : owner_code,
+          	left_lng : bounds._southWest.lng,
+          	bottom_lat : bounds._southWest.lat,
+          	right_lng : bounds._northEast.lng,
+          	top_lat : bounds._northEast.lat,
+          	simplification : simplification,
+          	geojson_digits : 3,
+          	srid : 4326
+          };
+
+          console.log(JSON.stringify(reqInfo));
+
+          $.ajax({
+            type: 'post',
+            url: '/fedlandsPSBBOC/',
+            data: JSON.stringify(reqInfo),
+            contentType: "application/json",
+            success: function (data) {
+              $('.spinner').hide();
+              var dataLayer = L.geoJson(data, {
+                style: function(feature) {
+                  return {color: strokeColor, fillColor: strokeColor, stroke: true, strokefillOpacity: .4};
+                }
+              });
+              lgFromApi.addLayer(dataLayer);
+            },
+            error: function(xhr){
+              console.log("An error occured: " + xhr.status + " " + xhr.statusText);
             }
           });
-          lgFromApi.addLayer(dataLayer);
-        });
+        }
+        else {
+          $.getJSON(geoJsonUrl, function(data) {
+            $('.spinner').hide();
+            var dataLayer = L.geoJson(data, {
+              style: function(feature) {
+                return {color: strokeColor, fillColor: strokeColor, stroke: true, strokefillOpacity: .4};
+              }
+            });
+            lgFromApi.addLayer(dataLayer);
+          });
+        }
+
         return lgFromApi;
       }
 
       function handleCheckboxClicks() {
         $("input[type='checkbox'][name='owner_code']").change(function() {
-          var id = $(this).attr('value');
-          var owner_code = $(this).attr('owner_code');
-          var owner = $(this).attr('owner');
-          var strokeColor = $(this).attr('color');
+          const id = $(this).attr('value');
+          const owner_code = $(this).attr('owner_code');
+          const owner = $(this).attr('owner');
+          const strokeColor = $(this).attr('color');
           if(this.checked) {
-            if(layerGroupsDisplayed[owner_code]) { //check layerGroupsToDisplay first, if not there then get it from the API
-              //console.log("from layerGroupsDisplayed");
+            if(apisource != 'postgres' && layerGroupsDisplayed[owner_code]) { //check layerGroupsToDisplay first, if not there then get it from the API
               layerGroupsDisplayed[owner_code].lg.addTo(map);
             }
             else {
               var lg = getLayerGroupFor(owner_code, strokeColor);
               lg.addTo(map);
-              //console.log(lg._leaflet_id);
               layerGroupsDisplayed[owner_code] = {
                 leafletid: lg._leaflet_id, lg: lg
               };
@@ -141,7 +206,7 @@
           console.log('Map data geojson source is geojson file: ' + url);
         }
         else if(apisource == 'postgres'){
-          url = "/fedlandsP/forOwnerCode/" + owner_code;
+          url = "/fedlandsPSBBOC/";
           console.log('Map data geojson source is postgres api: ' + url);
         }
         else if(apisource == 'mongo'){
@@ -172,24 +237,23 @@
         $('input[type=radio][name=datasource]').change(function() {
           $(this).parent().attr('class', 'btn btn-primary active');
           if(this.value == "geojson"){
-            //console.log('geojson');
             apisource = "geojson";
             $(this).parent().next().attr('class', 'btn btn-primary');
             $(this).parent().next().next().attr('class', 'btn btn-primary');
           }
           else if (this.value == "postgres") {
-            //console.log('postgres');
             apisource = "postgres";
             $(this).parent().prev().attr('class', 'btn btn-primary');
             $(this).parent().next().attr('class', 'btn btn-primary');
           }
           else if (this.value == "mongo") {
-            //console.log('mongo');
             apisource = "mongo";
             $(this).parent().prev().attr('class', 'btn btn-primary');
             $(this).parent().prev().prev().attr('class', 'btn btn-primary');
           }
-          init();
+          clearMap();
+          clearCheckboxes();
+          $('#NPS').click();
         });
       }
 
@@ -221,29 +285,61 @@
         spinner = new Spinner(opts).spin(target);
       }
 
-      function init() {
-        layerGroupsDisplayed = {};
-
-        createSpinner();
-
+      function clearMap() {
         map.eachLayer(function (layer) {
           if(!layer._url){
             map.removeLayer(layer);
-            $('input[type=checkbox]').each(function(){
-              this.checked = false;
-            });
           }
         });
+        layerGroupsDisplayed = {};
+      }
 
+      function clearCheckboxes() {
+        $('input[type=checkbox]').each(function(){
+          this.checked = false;
+        });
+      }
+
+      function populateLegend() {
         var jsonUrl = getOwnersUrl();
         $.getJSON(jsonUrl, function (data) {
-          populateLegend (data);
+          populateLegendFrom(data);
+        });
+      }
+
+      function populateLegendFrom(data){
+        var checkboxes = '';
+        for (var owner in data) {
+          checkboxes += "<input type='checkbox' name='owner_code' id='" + data[owner].owner_code + "' value='" + data[owner].id + "' color='" + data[owner].color + "' owner_code='" + data[owner].owner_code + "' owner='" + data[owner].owner + "'> <label for='" + data[owner].owner_code + "'><span style='color:" + data[owner].color + "'>" + data[owner].owner + "</span></label></br>";
+        }
+        $('#ownerCheckboxes').html(checkboxes);
+        handleCheckboxClicks();
+        $('#NPS').click();
+      };
+
+      function redoMapForPostgres() {
+        clearMap();
+        const clickTheseCheckboxes = [];
+        $('input[type=checkbox]').each(function(){
+          if(this.checked)
+            clickTheseCheckboxes.push(this.id);
+        });
+        clearCheckboxes();
+        clickTheseCheckboxes.forEach(function(owner_code) {
+          $('#' + owner_code).click();
         });
       }
 
       $(document).ready(function() {
+        createSpinner();
+        populateLegend();
         handleDataSourceClick();
-        init();
+      });
+
+      map.on("moveend", function () {
+        if(apisource == 'postgres') {
+          redoMapForPostgres();
+        }
       });
 
     </script>

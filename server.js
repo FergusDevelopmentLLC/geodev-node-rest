@@ -27,13 +27,15 @@ app.use(bodyParser.json());
 
 //routes
 const ownersP = require('./routes/ownersP');
-const fedlandsP = require('./routes/fedlandsP');
 app.use('/ownersP', ownersP);
+const fedlandsP = require('./routes/fedlandsP');
 app.use('/fedlandsP', fedlandsP);
+const fedlandsPSBBOC = require('./routes/fedlandsPSBBOC');
+app.use('/fedlandsPSBBOC', fedlandsPSBBOC);
 
 const ownersM = require('./routes/ownersM');
-const fedlandsM = require('./routes/fedlandsM');
 app.use('/ownersM', ownersM);
+const fedlandsM = require('./routes/fedlandsM');
 app.use('/fedlandsM', fedlandsM);
 
 // catch 404 and forward them to error handler
