@@ -177,6 +177,7 @@
       if(app.currentsource == 'POSTGIS') {
         const simplification = getSimplication();
         const requestInfoObject = getRequestInfoObjectFor(owner_code, simplification);
+        console.log(JSON.stringify(requestInfoObject));
         axios.post(geoJsonUrl, requestInfoObject).then(res => {
           document.getElementsByClassName('spinner')[0].style.display = 'none';
           lg.addLayer(L.geoJson(res.data, { style: function(feature) { return {color: color, fillColor: color, stroke: true, strokefillOpacity: .4}; } }));
