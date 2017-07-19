@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset=utf-8 />
     <title>United States Federal Lands</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+    <script src="http://spin.js.org/spin.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
-
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
     <link href='http://getbootstrap.com/dist/css/bootstrap.css' rel='stylesheet' type='text/css'>
@@ -18,330 +20,277 @@
           font-size: 15px;
         }
         html, body, #map {
-            height: 100%;
-            width: 100%;
+          height: 100%;
+          width: 100%;
         }
         #legend {
           position:absolute;
           z-index: 401;
           bottom: 20px;
           left: 20px;
-          width: 251px;
+          width: 324px;
           background-color: #fff;
           padding:10px;
           border-radius: 5px;
         }
-
-        #owner-checkboxes-wrapper {
-          margin: 0 0 5px 0;
-        }
-
         h4 {
           margin: 0 0 10px 0;
           text-align: center;
         }
     </style>
 </head>
-
 <body>
   <div id="legend">
     <h4>U.S. Federal Lands</h4>
-    <div id="owner-checkboxes-wrapper">
-      <span id='ownerCheckboxes'/>
-    </div>
-    <div class="btn-group" data-toggle="buttons">
-      <label class="btn btn-primary active"><input type="radio" name="datasource" id="geojson" value="geojson" />GEOJSON</label>
-      <label class="btn btn-primary"><input type="radio" name="datasource" id="postgres" value="postgres" />POSTGRES</label>
-      <label class="btn btn-primary"><input type="radio" name="datasource" id="mongo" value="mongo" />MONGO</label>
+    <div id="app">
+      <template v-for="owner in owners">
+        <input
+          type='checkbox'
+          v-on:change='landsToggle'
+          :id='owner.owner_code'
+          :ref='owner.owner_code'
+          :value='owner.owner_code'
+          :color='owner.color'
+          :owner_code='owner.owner_code' />&nbsp;<label :for='owner.owner_code'>
+            <span v-bind:style="{ color: owner.color }">{{ owner.owner }}</span>
+          </label>
+          </br>
+      </template>
+      <div class="btn-group" data-toggle="buttons">
+        <template v-for="source in sources">
+        <label class="btn btn-primary" v-bind:class="{ active: source === 'GEOJSON' }"><input
+          type="radio"
+          v-on:change='sourcesToggle'
+          :ref='source'
+          :value='source'
+          :value='source' />{{ source }}</label>
+        </template>
+      </div>
     </div>
   </div>
+  <div id='map'></div>
+</body>
+</html>
+<script>
 
-    <div id='map'></div>
+    var map = L.map('map', {
+      center: [39.094145, -105.683906],
+      zoom: 4,
+    });
 
-    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
-    <script src="http://spin.js.org/spin.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      subdomains: 'abcd',
+      minZoom: 4,
+      maxZoom: 14
+    }).addTo(map);
 
-    <script>
+    var layerGroupsDisplayed = {};
 
-      var map = L.map('map', {
-        center: [39.094145, -105.683906],
-        zoom: 4,
-      });
+    const ownersUrl = "data/owners.json";
 
-      //console.log(map.getBounds());
-
-      var tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-        subdomains: 'abcd',
-        minZoom: 4,
-        maxZoom: 14
-      }).addTo(map);
-
-       var layerGroupsDisplayed = {};
-      var apisource = 'geojson';
-      var spinner;
-
-      function getLayerGroupFor(owner_code, strokeColor) {
-
-        var lgFromApi = new L.layerGroup();
-
-        var geoJsonUrl = getGeoJsonUrl(owner_code);
-
-        $('.spinner').show();
-
-        if(geoJsonUrl == '/fedlandsPSBBOC/') {
-
-          // const reqInfo = {
-          // 	owner_code : "NPS",
-          // 	left_lng : -109.044926,
-          // 	bottom_lat : 36.999016,
-          // 	right_lng : -102.051515,
-          // 	top_lat : 41.001666,
-          // 	simplification : 1.00,
-          // 	geojson_digits : 3,
-          // 	srid : 4326
-          // };
-
-          const bounds = map.getBounds();
-          const zoom = parseInt(map.getZoom());
-
-          var simplification = 1.00;
-
-          if(zoom < 5){
-            simplification = 1.00;
-          }
-          if(zoom >= 5 && zoom < 6){
-            simplification = 0.1;
-          }
-          if(zoom >= 6 && zoom < 7){
-            simplification = 0.01;
-          }
-          if(zoom >= 7 && zoom < 8){
-            simplification = 0.005;
-          }
-          if(zoom >= 8){
-            simplification = 0.001;
-          }
-
-          //console.log('zoom level: ' + zoom);
-
-          const reqInfo = {
-          	owner_code : owner_code,
-          	left_lng : bounds._southWest.lng,
-          	bottom_lat : bounds._southWest.lat,
-          	right_lng : bounds._northEast.lng,
-          	top_lat : bounds._northEast.lat,
-          	simplification : simplification,
-          	geojson_digits : 3,
-          	srid : 4326
-          };
-
-          console.log(JSON.stringify(reqInfo));
-
-          $.ajax({
-            type: 'post',
-            url: '/fedlandsPSBBOC/',
-            data: JSON.stringify(reqInfo),
-            contentType: "application/json",
-            success: function (data) {
-              $('.spinner').hide();
-              var dataLayer = L.geoJson(data, {
-                style: function(feature) {
-                  return {color: strokeColor, fillColor: strokeColor, stroke: true, strokefillOpacity: .4};
-                }
-              });
-              lgFromApi.addLayer(dataLayer);
-            },
-            error: function(xhr){
-              console.log("An error occured: " + xhr.status + " " + xhr.statusText);
-            }
+    var app = new Vue({
+      el: '#app',
+      data: {
+        owners: '',
+        sources: ['GEOJSON','POSTGIS','POSTGRES','MONGO'],
+        currentsource: 'GEOJSON',
+        showspinner: false
+      },
+      methods: {
+        popOwners : function () {
+          let self = this;
+          axios.get(ownersUrl).then(res => {
+            this.owners = res.data;
+            self.$nextTick(function() {
+              self.$refs.NPS[0].click();
+            })
           });
-        }
-        else {
-          $.getJSON(geoJsonUrl, function(data) {
-            $('.spinner').hide();
-            var dataLayer = L.geoJson(data, {
-              style: function(feature) {
-                return {color: strokeColor, fillColor: strokeColor, stroke: true, strokefillOpacity: .4};
-              }
-            });
-            lgFromApi.addLayer(dataLayer);
-          });
-        }
-
-        return lgFromApi;
-      }
-
-      function handleCheckboxClicks() {
-        $("input[type='checkbox'][name='owner_code']").change(function() {
-          const id = $(this).attr('value');
-          const owner_code = $(this).attr('owner_code');
-          const owner = $(this).attr('owner');
-          const strokeColor = $(this).attr('color');
-          if(this.checked) {
-            if(apisource != 'postgres' && layerGroupsDisplayed[owner_code]) { //check layerGroupsToDisplay first, if not there then get it from the API
+        },
+        landsToggle : function (event) {
+          const owner_code = event.target.getAttribute('owner_code');
+          const strokeColor = event.target.getAttribute('color');
+          if(event.target.checked) {
+            if(this.currentsource != 'postgres' && layerGroupsDisplayed[owner_code]) { //check layerGroupsToDisplay first, if not there then get it from the API
               layerGroupsDisplayed[owner_code].lg.addTo(map);
             }
             else {
-              var lg = getLayerGroupFor(owner_code, strokeColor);
+              const lg = getLayerGroupFor(owner_code, strokeColor);
               lg.addTo(map);
-              layerGroupsDisplayed[owner_code] = {
-                leafletid: lg._leaflet_id, lg: lg
-              };
+              layerGroupsDisplayed[owner_code] = { leafletid: lg._leaflet_id, lg: lg };
             };
           }
           else {
             if(map.hasLayer(layerGroupsDisplayed[owner_code].lg))
               map.removeLayer(layerGroupsDisplayed[owner_code].lg);
           }
-        })
-      }
-
-      function getGeoJsonUrl(owner_code) {
-        var url = "data/" + owner_code + ".geojson";
-        if(apisource == 'geojson'){
-          url = "data/" + owner_code + ".geojson";
-          console.log('Map data geojson source is geojson file: ' + url);
-        }
-        else if(apisource == 'postgres'){
-          url = "/fedlandsPSBBOC/";
-          console.log('Map data geojson source is postgres api: ' + url);
-        }
-        else if(apisource == 'mongo'){
-          url = "/fedlandsM/forOwnerCode/" + owner_code;
-          console.log('Map data geojson source is mongo api: ' + url);
-        }
-        return url;
-      }
-
-      function getOwnersUrl(owner_code) {
-        var url = "data/owners.json";
-        if(apisource == 'geojson'){
-          url = "data/owners.json";
-          console.log('U.S. Federal lands source is local file: ' + url);
-        }
-        else if(apisource == 'postgres'){
-          url = "/ownersP";
-          console.log('U.S. Federal lands source is postgres api: ' + url);
-        }
-        else if(apisource == 'mongo'){
-          url = "/ownersM";
-          console.log('Map data geojson source is mongo api: ' + url);
-        }
-        return url;
-      }
-
-      function handleDataSourceClick() {
-        $('input[type=radio][name=datasource]').change(function() {
-          $(this).parent().attr('class', 'btn btn-primary active');
-          if(this.value == "geojson"){
-            apisource = "geojson";
-            $(this).parent().next().attr('class', 'btn btn-primary');
-            $(this).parent().next().next().attr('class', 'btn btn-primary');
+        },
+        sourcesToggle : function (event) {
+          event.target.parentElement.setAttribute('class', 'btn btn-primary active');
+          if(event.target.value == "GEOJSON"){
+            this.currentsource = "GEOJSON";
+            this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
+            this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
+            this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
-          else if (this.value == "postgres") {
-            apisource = "postgres";
-            $(this).parent().prev().attr('class', 'btn btn-primary');
-            $(this).parent().next().attr('class', 'btn btn-primary');
+          else if (event.target.value == "POSTGIS") {
+            this.currentsource = "POSTGIS";
+            this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
+            this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
+            this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
-          else if (this.value == "mongo") {
-            apisource = "mongo";
-            $(this).parent().prev().attr('class', 'btn btn-primary');
-            $(this).parent().prev().prev().attr('class', 'btn btn-primary');
+          else if (event.target.value == "POSTGRES") {
+            this.currentsource = "POSTGRES";
+            this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
+            this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
+            this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
+          }
+          else if (event.target.value == "MONGO") {
+            this.currentsource = "MONGO";
+            this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
+            this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
+            this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
           clearMap();
           clearCheckboxes();
-          $('#NPS').click();
-        });
-      }
-
-      function createSpinner() {
-        //http://spin.js.org/
-        var target = document.getElementById('map');
-        var opts = {
-          lines: 13 // The number of lines to draw
-        , length: 28 // The length of each line
-        , width: 14 // The line thickness
-        , radius: 42 // The radius of the inner circle
-        , scale: 1 // Scales overall size of the spinner
-        , corners: 1 // Corner roundness (0..1)
-        , color: '#000' // #rgb or #rrggbb or array of colors
-        , opacity: 0.25 // Opacity of the lines
-        , rotate: 0 // The rotation offset
-        , direction: 1 // 1: clockwise, -1: counterclockwise
-        , speed: 1 // Rounds per second
-        , trail: 60 // Afterglow percentage
-        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
-        , zIndex: 2e9 // The z-index (defaults to 2000000000)
-        , className: 'spinner' // The CSS class to assign to the spinner
-        , top: '50%' // Top position relative to parent
-        , left: '50%' // Left position relative to parent
-        , shadow: false // Whether to render a shadow
-        , hwaccel: false // Whether to use hardware acceleration
-        , position: 'absolute' // Element positioning
+          this.$refs.NPS[0].click();
         }
-        spinner = new Spinner(opts).spin(target);
-      }
-
-      function clearMap() {
-        map.eachLayer(function (layer) {
-          if(!layer._url){
-            map.removeLayer(layer);
-          }
-        });
-        layerGroupsDisplayed = {};
-      }
-
-      function clearCheckboxes() {
-        $('input[type=checkbox]').each(function(){
-          this.checked = false;
-        });
-      }
-
-      function populateLegend() {
-        var jsonUrl = getOwnersUrl();
-        $.getJSON(jsonUrl, function (data) {
-          populateLegendFrom(data);
-        });
-      }
-
-      function populateLegendFrom(data){
-        var checkboxes = '';
-        for (var owner in data) {
-          checkboxes += "<input type='checkbox' name='owner_code' id='" + data[owner].owner_code + "' value='" + data[owner].id + "' color='" + data[owner].color + "' owner_code='" + data[owner].owner_code + "' owner='" + data[owner].owner + "'> <label for='" + data[owner].owner_code + "'><span style='color:" + data[owner].color + "'>" + data[owner].owner + "</span></label></br>";
-        }
-        $('#ownerCheckboxes').html(checkboxes);
-        handleCheckboxClicks();
-        $('#NPS').click();
-      };
-
-      function redoMapForPostgres() {
-        clearMap();
-        const clickTheseCheckboxes = [];
-        $('input[type=checkbox]').each(function(){
-          if(this.checked)
-            clickTheseCheckboxes.push(this.id);
-        });
-        clearCheckboxes();
-        clickTheseCheckboxes.forEach(function(owner_code) {
-          $('#' + owner_code).click();
-        });
-      }
-
-      $(document).ready(function() {
+      },
+      created: function () {
+        this.popOwners();
+      },
+      mounted: function () {
         createSpinner();
-        populateLegend();
-        handleDataSourceClick();
-      });
+      }
+    });
 
-      map.on("moveend", function () {
-        if(apisource == 'postgres') {
-          redoMapForPostgres();
+    map.on("moveend", function () {
+      if(app.currentsource == 'POSTGIS') {
+        redrawForPostgis();
+      }
+    });
+
+    function getLayerGroupFor(owner_code, color) {
+      var geoJsonUrl = getGeoJsonUrl(owner_code);
+      var lg = new L.layerGroup();
+      document.getElementsByClassName('spinner')[0].style.display = 'block';
+      if(app.currentsource == 'POSTGIS') {
+        const simplification = getSimplication();
+        const requestInfoObject = getRequestInfoObjectFor(owner_code, simplification);
+        axios.post(geoJsonUrl, requestInfoObject).then(res => {
+          document.getElementsByClassName('spinner')[0].style.display = 'none';
+          lg.addLayer(L.geoJson(res.data, { style: function(feature) { return {color: color, fillColor: color, stroke: true, strokefillOpacity: .4}; } }));
+        });
+      }
+      else {
+        axios.get(geoJsonUrl).then(res => {
+          document.getElementsByClassName('spinner')[0].style.display = 'none';
+          lg.addLayer(L.geoJson(res.data, { style: function(feature) { return {color: color, fillColor: color, stroke: true, strokefillOpacity: .4}; } }));
+        });
+      };
+      return lg;
+    }
+
+    function getRequestInfoObjectFor(owner_code, simplification) {
+      const bounds = map.getBounds();
+      const reqInfo = {
+        owner_code : owner_code,
+        left_lng : bounds._southWest.lng,
+        bottom_lat : bounds._southWest.lat,
+        right_lng : bounds._northEast.lng,
+        top_lat : bounds._northEast.lat,
+        simplification : simplification,
+        geojson_digits : 3,
+        srid : 4326
+      };
+      return reqInfo;
+    }
+
+    function getGeoJsonUrl(owner_code) {
+      var url = "data/" + owner_code + ".geojson";
+      if(app.currentsource == 'GEOJSON'){
+        url = "data/" + owner_code + ".geojson";
+        console.log('Map data geojson source is geojson file: ' + url);
+      }
+      else if(app.currentsource == 'POSTGIS'){
+        url = "/fedlandsPSBBOC/"
+        console.log('Map data geojson source is postgres POST api: ' + url);
+      }
+      else if(app.currentsource == 'POSTGRES'){
+        url = "/fedlandsP/forOwnerCode/" + owner_code;
+        console.log('Map data geojson source is postgres api: ' + url);
+      }
+      else if(app.currentsource == 'MONGO'){
+        url = "/fedlandsM/forOwnerCode/" + owner_code;
+        console.log('Map data geojson source is mongo api: ' + url);
+      }
+      return url;
+    }
+
+    function getSimplication() {
+      const zoom = parseInt(map.getZoom());
+      var simplification = 1.00;
+      if(zoom < 5) { simplification = 1.00; }
+      if(zoom >= 5 && zoom < 6) { simplification = 0.1; }
+      if(zoom >= 6 && zoom < 7) { simplification = 0.01; }
+      if(zoom >= 7 && zoom < 8) { simplification = 0.005; }
+      if(zoom >= 8) { simplification = 0.001; }
+      return simplification;
+    };
+
+    function clearMap() {
+      map.eachLayer(function (layer) {
+        if(!layer._url){ map.removeLayer(layer); }
+      });
+      layerGroupsDisplayed = {};
+    }
+
+    function clearCheckboxes() {
+      for (ref in app.$refs) {
+        app.$refs[ref][0].checked = false;
+      };
+    };
+
+    function redrawForPostgis() {
+      clearMap();
+      const clickTheseCheckboxes = [];
+      for (ref in app.$refs) {
+        if(app.$refs[ref][0].checked) {
+          clickTheseCheckboxes.push(app.$refs[ref][0].id);
         }
+      };
+      clearCheckboxes();
+      clickTheseCheckboxes.forEach(function(id) {
+        eval('app.$refs.' + id + '[0].click()');
       });
+    };
 
-    </script>
-</body>
-</html>
+    function createSpinner() {
+      //http://spin.js.org/
+      var target = document.getElementById('map');
+      var opts = {
+        lines: 13 // The number of lines to draw
+      , length: 28 // The length of each line
+      , width: 14 // The line thickness
+      , radius: 42 // The radius of the inner circle
+      , scale: 1 // Scales overall size of the spinner
+      , corners: 1 // Corner roundness (0..1)
+      , color: '#FFF' // #rgb or #rrggbb or array of colors
+      , opacity: 0.25 // Opacity of the lines
+      , rotate: 0 // The rotation offset
+      , direction: 1 // 1: clockwise, -1: counterclockwise
+      , speed: 1 // Rounds per second
+      , trail: 60 // Afterglow percentage
+      , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+      , zIndex: 2e9 // The z-index (defaults to 2000000000)
+      , className: 'spinner' // The CSS class to assign to the spinner
+      , top: '50%' // Top position relative to parent
+      , left: '50%' // Left position relative to parent
+      , shadow: false // Whether to render a shadow
+      , hwaccel: false // Whether to use hardware acceleration
+      , position: 'absolute' // Element positioning
+      }
+      spinner = new Spinner(opts).spin(target);
+    }
+
+</script>
