@@ -6,7 +6,7 @@ router.route('/')
   .get(OwnerPController.index)
   .post(validateBody(schemas.ownerPSchema), OwnerPController.newOwnerP);
 
-router.route('/:ownerpid') //ownerPs/xyz
+router.route('/:ownerpid') //ownersP/1
   .get(validateParam(schemas.idSchema, 'ownerpid'), OwnerPController.getOwnerP)
   .put([validateParam(schemas.idSchema, 'ownerpid'),
     validateBody(schemas.ownerPSchema)],

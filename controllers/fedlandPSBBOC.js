@@ -18,14 +18,14 @@ module.exports = {
     // 	"srid" : 4326
     // }
 
-    const owner_code = req.body.owner_code;
-    const left_lng = req.body.left_lng;
-    const bottom_lat = req.body.bottom_lat;
-    const right_lng = req.body.right_lng;
-    const top_lat = req.body.top_lat;
-    const simplification = req.body.simplification;
-    const geojson_digits = req.body.geojson_digits;
-    const srid = req.body.srid;
+    const owner_code = req.value.body.owner_code;
+    const left_lng = req.value.body.left_lng;
+    const bottom_lat = req.value.body.bottom_lat;
+    const right_lng = req.value.body.right_lng;
+    const top_lat = req.value.body.top_lat;
+    const simplification = req.value.body.simplification;
+    const geojson_digits = req.value.body.geojson_digits;
+    const srid = req.value.body.srid;
 
     //1.0 to 0.001, simple to complex
     // ST_MakeEnvelope(left, bottom, right, top, srid)
