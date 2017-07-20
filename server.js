@@ -9,8 +9,8 @@ const logger = require('morgan');
 const Model = require('objection').Model;
 const knexConfig = require('./knexfile');
 const Knex = require('knex');
-const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);// Initialize knex
-Model.knex(knex);// Bind all Models to a knex instance
+const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
+Model.knex(knex);
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;

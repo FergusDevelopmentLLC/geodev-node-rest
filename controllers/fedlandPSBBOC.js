@@ -1,7 +1,7 @@
 const FedlandPSBBOC = require('../models/fedlandPSBBOC');
+const knexConfig = require('./knexfile');
 const Knex = require('knex');
-const knexConfig = require('../knexfile');
-const knex = Knex(knexConfig.development);// Initialize knex
+const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
 
 module.exports = {
 
