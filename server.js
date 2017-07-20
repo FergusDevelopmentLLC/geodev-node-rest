@@ -7,8 +7,8 @@ const helmet = require('helmet');
 const logger = require('morgan');
 
 const Model = require('objection').Model;
-const knexConfig = require('./knexfile');
 const Knex = require('knex');
+const knexConfig = require('./knexfile');
 const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
 Model.knex(knex);
 

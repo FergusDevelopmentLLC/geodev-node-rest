@@ -1,5 +1,5 @@
 const OwnerP = require('../models/ownerP');
-const knexConfig = require('./knexfile');
+const knexConfig = require('../knexfile.js');
 const Knex = require('knex');
 const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
 
