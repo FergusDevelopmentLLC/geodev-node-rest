@@ -87,22 +87,22 @@
 
     var layerGroupsDisplayed = {};
 
-    const ownersUrl = "data/owners.json";
-
     var app = new Vue({
       el: '#app',
       data: {
         owners: '',
+        ownersUrl: 'data/owners.json',
         sources: ['GEOJSON','POSTGIS','POSTGRES','MONGO'],
-        currentsource: 'GEOJSON',
-        showspinner: false
+        currentsource: 'GEOJSON'
       },
       methods: {
         popOwners : function () {
           let self = this;
-          axios.get(ownersUrl).then(res => {
+          console.log('Owners json source is api: ' + self.ownersUrl);
+          axios.get(self.ownersUrl).then(res => {
             this.owners = res.data;
             self.$nextTick(function() {
+              clearCheckboxes();
               self.$refs.NPS[0].click();
             })
           });
@@ -121,7 +121,7 @@
             };
           }
           else {
-            if(map.hasLayer(layerGroupsDisplayed[owner_code].lg))
+            if(layerGroupsDisplayed[owner_code] && map.hasLayer(layerGroupsDisplayed[owner_code].lg))
               map.removeLayer(layerGroupsDisplayed[owner_code].lg);
           }
         },
@@ -129,40 +129,42 @@
           event.target.parentElement.setAttribute('class', 'btn btn-primary active');
           if(event.target.value == "GEOJSON"){
             this.currentsource = "GEOJSON";
+            this.ownersUrl = "data/owners.json";
             this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
           else if (event.target.value == "POSTGIS") {
             this.currentsource = "POSTGIS";
+            this.ownersUrl = "/ownersP";
             this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
           else if (event.target.value == "POSTGRES") {
             this.currentsource = "POSTGRES";
+            this.ownersUrl = "/ownersP";
             this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
           else if (event.target.value == "MONGO") {
             this.currentsource = "MONGO";
+            this.ownersUrl = "/ownersM";
             this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
+          this.popOwners();
           clearMap();
-          clearCheckboxes();
-          this.$refs.NPS[0].click();
         }
       },
       created: function () {
         this.popOwners();
-      },
-      mounted: function () {
-        createSpinner();
       }
     });
+
+    createSpinner();
 
     map.on("moveend", function () {
       if(app.currentsource == 'POSTGIS') {
@@ -231,11 +233,11 @@
     function getSimplication() {
       const zoom = parseInt(map.getZoom());
       var simplification = 1.00;
-      if(zoom < 5) { simplification = 1.00; }
-      if(zoom >= 5 && zoom < 6) { simplification = 0.1; }
-      if(zoom >= 6 && zoom < 7) { simplification = 0.01; }
-      if(zoom >= 7 && zoom < 8) { simplification = 0.005; }
-      if(zoom >= 8) { simplification = 0.001; }
+      if (zoom < 5) { simplification = 1.00; }
+      if (zoom >= 5 && zoom < 6) { simplification = 0.1; }
+      if (zoom >= 6 && zoom < 7) { simplification = 0.01; }
+      if (zoom >= 7 && zoom < 8) { simplification = 0.005; }
+      if (zoom >= 8) { simplification = 0.001; }
       return simplification;
     };
 

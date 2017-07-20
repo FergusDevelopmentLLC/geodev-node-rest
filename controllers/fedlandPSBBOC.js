@@ -32,7 +32,7 @@ module.exports = {
     // ST_MakeEnvelope(LON1, LAT1, LON2, LAT2, 4326)
 
     var   sql =  " select id, ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom, " + simplification + "), " + geojson_digits + ") as geojson, owner, owner_code, name, state, state_fips ";
-          sql += " from fedland_v2 ";
+          sql += " from fedland_postgis ";
           sql += " where owner_code = '" + owner_code + "' ";
           sql += " AND ST_SimplifyPreserveTopology(geom, " + simplification + ") && ST_MakeEnvelope(" + left_lng + ", " + bottom_lat + ", " + right_lng + ", " + top_lat + ", " + srid + "); ";
 
