@@ -5,10 +5,10 @@ const { validateParam, validateBody, schemas } = require('../helpers/routeHelper
 router.route('/')
   .get(FedlandPController.index);
 
-router.route('/:fedlandpid') //fedlands/xyz
+router.route('/:fedlandpid') // /fedlands/1
   .get(validateParam(schemas.idSchema, 'fedlandpid'), FedlandPController.getFedlandP);
 
-router.route('/forOwnerCode/:ownercode') //fedlands/forOwnerCode/xyz
+router.route('/forOwnerCode/:ownercode') // /fedlands/forOwnerCode/NPS
   .get(validateParam(schemas.ownerCodeSchema, 'ownercode'), FedlandPController.getFedlandPForOwnerCode);
 
 module.exports = router;

@@ -6,7 +6,7 @@ router.route('/')
   .get(OwnerMController.index)
   .post(validateBody(schemas.ownerMSchema), OwnerMController.newOwnerM);
 
-router.route('/:ownermid') //ownerMs/xyz
+router.route('/:ownermid') // /ownersM/xyz
   .get(validateParam(schemas.idSchema, 'ownermid'), OwnerMController.getOwnerM)
   .put([validateParam(schemas.idSchema, 'ownermid'),
     validateBody(schemas.ownerMSchema)],
