@@ -1,8 +1,13 @@
 # GeoWebStack
 
-Building a geospatial web development stack
+### Project Background
+Building a geospatial web development stack. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.
 
-## Target Web Stack
+Demo [map](http://104.236.16.91:8641/):
+
+![http://104.236.16.91:8641/](http://storage6.static.itmages.com/i/17/0724/h_1500923403_9513361_eba9dd45f7.png)
+
+### Web Stack
 * Operating System
   * Linux 17.04 minimal install
 * Backend:
@@ -27,7 +32,7 @@ Building a geospatial web development stack
   * Postman - https://www.getpostman.com/ - Powerful HTTP client for testing web services.
   * Oracle VirtualBox - https://www.virtualbox.org/
 
-## OS
+#### Operating System
 
 * Ubuntu 17.04 "Zesty Zapus"
 * https://help.ubuntu.com/community/Installation/MinimalCD
@@ -42,29 +47,37 @@ Building a geospatial web development stack
   VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
   ~~~~
 
-https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
+  * https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
 assumes that you have a Sudo user on your system called geodevadmin
 
-~~~~
-$ sudo adduser geodevadmin
-$ usermod -aG sudo geodevadmin
-$ sudo -i -u geodevadmin
-~~~~
+  ~~~~
+  $ sudo adduser geodevadmin
+  $ usermod -aG sudo geodevadmin
+  $ sudo -i -u geodevadmin
+  ~~~~
 
-## Install PostgreSQL
+#### Backend
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
+##### PostgreSQL
+
+Install PostgreSQL.
 
 ~~~~
 $ sudo apt-get update
 $ sudo apt-get install postgresql postgresql-contrib
 ~~~~
 
-## Install PostGIS Extension
+##### PostGIS
+
+Install PostGIS Extension.
 
 ~~~~
 $ sudo apt-get install postgis
 ~~~~
 
-## Create geodevdb database and role/user
+##### Create geodevdb database and role/user
 
 ~~~~
 $ sudo -i -u postgres
@@ -73,12 +86,12 @@ Enter name of role to add: geodevdb
 Shall the new role be a superuser? (y/n) y
 ~~~~
 
-## Create geodevdb database
+##### Create geodevdb database
 ~~~~
 $ createdb geodevdb
 ~~~~
 
-## Set geodevdb database password
+##### Set geodevdb database password
 ~~~~
 $ psql
 psql (9.6.3)
@@ -86,7 +99,7 @@ Type "help" for help.
 postgres=# ALTER USER geodevdb WITH PASSWORD 'admin123';
 ~~~~
 
-## Set geodevdb ownership
+##### Set geodevdb ownership
 ~~~~
 postgres=# ALTER DATABASE geodevdb OWNER TO geodevdb;
 postgres=# \q
@@ -119,7 +132,7 @@ Make geodevdb a sudoer
 $ sudo usermod -aG sudo geodevdb
 ~~~~
 
-## Enable PostGIS spatial Features
+##### Enable PostGIS spatial Features
 ~~~~
 geodevadmin@geodev:~$ sudo -i -u postgres
 postgres@geodev:~$ psql -d geodevdb
@@ -138,7 +151,7 @@ geodevdb=# \q
 $ logout
 ~~~~
 
-## Optimize PostgreSQL for GIS Database Objects
+##### Optimize PostgreSQL for GIS Database Objects
 
 ~~~~
 $ sudo nano /etc/postgresql/9.6/main/postgresql.conf
@@ -150,7 +163,7 @@ wal_keep_segments = 6                   # in logfile segments, 16MB each; 0 disa
 random_page_cost = 2.0                  # same scale as above
 ~~~~
 
-## Allow connections to geodevdb
+##### Allow connections to geodevdb
 
 ~~~~
 $ sudo nano /etc/postgresql/9.6/main/pg_hba.conf
