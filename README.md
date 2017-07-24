@@ -19,13 +19,14 @@ Demo [map](http://104.236.16.91:8641/):
   * [MongoDB](#mongodb) - [Document database (noSQL) based on scalability and flexibility](https://www.mongodb.com/)
 * geodev-node-rest application
   * Web server
-    * [Node.js](https://nodejs.org/) - Runtime built on Chrome's V8 JavaScript engine
-      * [Express.js](https://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js
-      * [Knex.js](http://knexjs.org/) - Query builder for PostgreSQL
-      * [Mongoose.js](http://mongoosejs.com/) - Elegant mongodb object modeling for node.js
-      * [Joi.js](https://github.com/hapijs/joi) - Validator for JavaScript objects
-    * [REST API](https://en.wikipedia.org/wiki/Representational_state_transfer) - way of providing interoperability between computer systems on the Internet
-      * [GeoJSON](http://geojson.org/) - Javascript format for encoding a variety of geographic data structures
+    * [Node.js](#nodejs) - [Runtime built on Chrome's V8 JavaScript engine](https://nodejs.org/)
+      * [Express.js](#expressjs) - [Web framework for Node.js](https://expressjs.com/)
+      * [Knex.js](#knexjs) - [Query builder for PostgreSQL/Node.js](http://knexjs.org/)
+      * [Mongoose.js](#mongoosejs) - [Object modeler for Node.js](http://mongoosejs.com/)
+      * [Joi.js](#joijs) - [Validator for JavaScript objects](http://mongoosejs.com/)
+    * [Load data](#load-data)
+    * [REST API](#restapi) - [way of providing interoperability between computer systems on the Internet](https://en.wikipedia.org/wiki/Representational_state_transfer)
+      * [GeoJSON](#geojson) - [JavaScript format for encoding a variety of geographic data structures](http://geojson.org/)
   * Front-end
     * [Vue.js](https://vuejs.org/) - Open-source progressive JavaScript framework for building user interfaces
     * [Leaflet.js](http://leafletjs.com/) - Leading open-source JavaScript library for mobile-friendly interactive maps
