@@ -17,19 +17,19 @@ Demo [map](http://104.236.16.91:8641/):
     * [PostGIS](#postgis) - [Geospatial database extender for PostgreSQL](http://postgis.net/)
     * [PostgreSQL database administration](#postgresql-database-administration)
   * [MongoDB](#mongodb) - [Document database (noSQL) based on scalability and flexibility](https://www.mongodb.com/)
-  * [REST API](https://en.wikipedia.org/wiki/Representational_state_transfer) - way of providing interoperability between computer systems on the Internet
-    * [GeoJSON](http://geojson.org/) - Javascript format for encoding a variety of geographic data structures
-* Web server
-  * [Node.js](https://nodejs.org/) - Runtime built on Chrome's V8 JavaScript engine
-    * [Express.js](https://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js
-      * ORMs
-        * [Knex.js](http://knexjs.org/) - Query builder for PostgreSQL, MySQL and SQLite3, designed to be flexible, portable, and fun to use
-        * [Mongoose.js](http://mongoosejs.com/) - Elegant mongodb object modeling for node.js
-    * [Joi.js](https://github.com/hapijs/joi) - Object schema description language and validator for JavaScript objects
-* Front-end
-  * [Vue.js](https://vuejs.org/) - Open-source progressive JavaScript framework for building user interfaces
-  * [Leaflet.js](http://leafletjs.com/) - Leading open-source JavaScript library for mobile-friendly interactive maps
-  * [Bootstrap](http://getbootstrap.com/) - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web
+* geodev-node-rest application
+  * Web server
+    * [Node.js](https://nodejs.org/) - Runtime built on Chrome's V8 JavaScript engine
+      * [Express.js](https://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js
+      * [Knex.js](http://knexjs.org/) - Query builder for PostgreSQL
+      * [Mongoose.js](http://mongoosejs.com/) - Elegant mongodb object modeling for node.js
+      * [Joi.js](https://github.com/hapijs/joi) - Validator for JavaScript objects
+    * [REST API](https://en.wikipedia.org/wiki/Representational_state_transfer) - way of providing interoperability between computer systems on the Internet
+      * [GeoJSON](http://geojson.org/) - Javascript format for encoding a variety of geographic data structures
+  * Front-end
+    * [Vue.js](https://vuejs.org/) - Open-source progressive JavaScript framework for building user interfaces
+    * [Leaflet.js](http://leafletjs.com/) - Leading open-source JavaScript library for mobile-friendly interactive maps
+    * [Bootstrap](http://getbootstrap.com/) - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web
 * Utilities
   * [Postman](https://www.getpostman.com/) - Powerful HTTP client for testing web services
   * [Oracle VirtualBox](https://www.virtualbox.org/) - Virtual Machine
