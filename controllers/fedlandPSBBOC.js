@@ -8,6 +8,15 @@ module.exports = {
 
   getFedlandPSBBOC: async (req, res, next) => {
 
+    const owner_code = req.value.body.owner_code;
+    const left_lng = req.value.body.left_lng;
+    const bottom_lat = req.value.body.bottom_lat;
+    const right_lng = req.value.body.right_lng;
+    const top_lat = req.value.body.top_lat;
+    const simplification = req.value.body.simplification;
+    const geojson_digits = req.value.body.geojson_digits;
+    const srid = req.value.body.srid;
+
     // {
     // 	"owner_code" : "NPS",
     // 	"left_lng" : -109.044926,
@@ -19,28 +28,16 @@ module.exports = {
     // 	"srid" : 4326
     // }
 
-    const owner_code = req.value.body.owner_code;
-    const left_lng = req.value.body.left_lng;
-    const bottom_lat = req.value.body.bottom_lat;
-    const right_lng = req.value.body.right_lng;
-    const top_lat = req.value.body.top_lat;
-    const simplification = req.value.body.simplification;
-    const geojson_digits = req.value.body.geojson_digits;
-    const srid = req.value.body.srid;
-
-    //1.0 to 0.001, simple to complex
-    // ST_MakeEnvelope(left, bottom, right, top, srid)
-    // ST_MakeEnvelope(LON1, LAT1, LON2, LAT2, 4326)
+    // 1.0 to 0.001, simple to complex
+    // ST_MakeEnvelope(left_lng, bottom_lat, right_lng, top_lat, 4326)
 
     var   sql =  " select id, ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom, " + simplification + "), " + geojson_digits + ") as geojson, owner, owner_code, name, state, state_fips ";
           sql += " from fedland_postgis ";
           sql += " where owner_code = '" + owner_code + "' ";
           sql += " AND ST_SimplifyPreserveTopology(geom, " + simplification + ") && ST_MakeEnvelope(" + left_lng + ", " + bottom_lat + ", " + right_lng + ", " + top_lat + ", " + srid + "); ";
 
-    // console.log("========");
     // console.log(sql);
-    // console.log("========");
-
+    
     const result = await knex.raw(sql);
     const fedlands = [];
     for(var feature in result.rows) {
