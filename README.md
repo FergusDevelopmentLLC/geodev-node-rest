@@ -55,7 +55,7 @@ $ sudo apt-get install postgis
 
 ## Create geodevdb database and role/user
 
-~~~~~
+~~~~
 $ sudo -i -u postgres
 $ createuser --interactive
 Enter name of role to add: geodevdb
