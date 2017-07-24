@@ -1,5 +1,3 @@
-# GeoWebStack
-
 ## Project Background
 Building a geospatial web development stack. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.
 
@@ -17,23 +15,27 @@ Demo [map](http://104.236.16.91:8641/):
     * [PostGIS](#postgis) - [Geospatial database extender for PostgreSQL](http://postgis.net/)
     * [PostgreSQL database administration](#postgresql-database-administration)
   * [MongoDB](#mongodb) - [Document database (noSQL) based on scalability and flexibility](https://www.mongodb.com/)
-* geodev-node-rest application
-  * Web server
-    * [Node.js](#nodejs) - [Runtime built on Chrome's V8 JavaScript engine](https://nodejs.org/)
-      * [Express.js](#expressjs) - [Web framework for Node.js](https://expressjs.com/)
-      * [Knex.js](#knexjs) - [Query builder for PostgreSQL/Node.js](http://knexjs.org/)
-      * [Mongoose.js](#mongoosejs) - [Object modeler for Node.js](http://mongoosejs.com/)
-      * [Joi.js](#joijs) - [Validator for JavaScript objects](http://mongoosejs.com/)
-    * [Load data](#load-data)
-    * [REST API](#restapi) - [way of providing interoperability between computer systems on the Internet](https://en.wikipedia.org/wiki/Representational_state_transfer)
-      * [GeoJSON](#geojson) - [JavaScript format for encoding a variety of geographic data structures](http://geojson.org/)
-  * Front-end
-    * [Vue.js](https://vuejs.org/) - Open-source progressive JavaScript framework for building user interfaces
-    * [Leaflet.js](http://leafletjs.com/) - Leading open-source JavaScript library for mobile-friendly interactive maps
-    * [Bootstrap](http://getbootstrap.com/) - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web
-* Utilities
-  * [Postman](https://www.getpostman.com/) - Powerful HTTP client for testing web services
-  * [Oracle VirtualBox](https://www.virtualbox.org/) - Virtual Machine
+* [Web server](#web-server)
+  * [Node.js](#nodejs) - [Runtime built on Chrome's V8 JavaScript engine](https://nodejs.org/)
+  * [Git](#git) - [Version control system](https://git-scm.com/)
+  * [geodev-node-rest application](#install-geodev-node-rest-application)
+    * [Application set up](#application-set-up)
+    * [Key Packages](#key-packages)
+      * [Express.js](#express) - [Web framework for Node.js](https://expressjs.com/)
+      * [Knex.js](#knex) - [Query builder for PostgreSQL/Node.js](http://knexjs.org/)
+      * [Mongoose.js](#mongoose) - [Object modeler for MongoDB/Node.js](http://mongoosejs.com/)
+      * [Joi.js](#joi) - [Validator for JavaScript objects](http://mongoosejs.com/)
+  * [Populate PostgreSQL tables](#populate-postgresql-tables)
+  * [Populate MongoDB collections](#populate-mongodb-collections)
+  * [REST api](#rest-api)
+  * [PostGIS tricks](#postgis-tricks)
+* [Front-end](#front-end)
+  * [Vue.js](#vue) - [Open-source progressive JavaScript framework for building user interfaces](https://vuejs.org/)
+  * [Leaflet.js](#leaflet) - [Leading open-source JavaScript library for mobile-friendly interactive maps](http://leafletjs.com/)
+  * [Bootstrap](#bootstrap) - [Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web](http://getbootstrap.com/)
+* [Utilities](#utilities)
+  * [Postman](#postman) - [Powerful HTTP client for testing web services](https://www.getpostman.com/)
+  * [Oracle VirtualBox](#oracle-virtualbox) - [Virtual Machine](https://www.virtualbox.org/)
 
 ### Operating System
 
@@ -220,21 +222,13 @@ $ mongod
 2017-07-19T12:18:34.084-0600 I NETWORK  [thread1] waiting for connections on port 27017
 ~~~~
 
-#### REST API
+### Web Server
 
 At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 
-API routes:
-~~~~
-/ownerP
-/ownerM
-/asdfsad/
-~~~~
+#### Node.js
 
-
-### Node.js
-
-Install Nodejs with nvm
+Install Node.js with [nvm](https://github.com/creationix/nvm). NVM - Node Version Manager. Manage multiple active node.js versions.
 
 ~~~~
 $ mkdir download
@@ -282,13 +276,16 @@ Now using node v7.6.0 (npm v4.1.2)
 Creating default alias: default -> 7.6.0 (-> v7.6.0)
 ~~~~
 
-## Install Git
+#### Git
 
+Install Git.
 ~~~~
-sudo apt-get install git
+$ sudo apt-get install git
 ~~~~
 
-## Install geodev-node-rest
+#### Install geodev-node-rest application
+
+Install geodev-node-rest application. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 
 ~~~~
 $ mkdir app
@@ -302,21 +299,39 @@ Receiving objects: 100% (267/267), 36.30 MiB | 9.66 MiB/s, done.
 Resolving deltas: 100% (114/114), done.
 ~~~~
 
-## Take ownership of geodev-node-rest, npm install packages
+#### Application set up
+
+Jiusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio
+
+##### Grant geodevadmin ownership of geodev-node-rest
 ~~~~
 $ sudo chown -R geodevadmin /home/geodevadmin/app/geodev-node-rest
+~~~~
+
+##### Install packages via NPM
+~~~~
 $ cd geodev-node-rest/
 $ npm install
 ~~~~
 
-## Download and unarchive static geojson files:
+##### Download static geojson archive
 ~~~~
 $ cd public/data
 $ wget http://104.236.16.91:8641/data/fedland_geojson.tar.gz
+~~~~
+
+##### Untar to get individual GeoJSON files
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+
+~~~~
 $ tar xvf fedland_geojson.tar.gz
 ~~~~
 
-## add ./knexfile for connections to PostgreSql
+##### Add knexfile.js
+
+Dodio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
 ~~~~
 $ sudo nano ~/app/geodev-node-rest/knexfile.js
 
@@ -351,20 +366,31 @@ module.exports = {
 };
 ~~~~
 
-## App will run from static files
-~~~~
-$ cd ..
-$ cd ..
-$ node server
-App listening at port 8641
-~~~~
+#### Key packages
 
-![](http://storage6.static.itmages.com/i/17/0719/h_1500498051_9389335_648afe145b.png)
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 
-We need some data. Use ctrl-c to stop the server
+##### Express
 
-## Download Federal Lands shapefile
+Express is a web framework for Node.js. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt.
 
+##### Knex
+
+Knex.js is a query builder for PostgreSQL/Node.js. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+
+##### Mongoose
+
+Similarly, Mongoose.js is an object modeler for MongoDB/Node.js At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.
+
+##### Joi
+
+Joi.js is a validator for JavaScript objects. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos.
+
+#### Populate PostgreSQL tables
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos.
+
+##### Download Federal Lands shapefile
 ~~~~
 $ logout
 $ sudo -i -u geodevdb
@@ -372,6 +398,10 @@ $ cd ~
 $ mkdir download
 $ cd download
 $ wget http://dds.cr.usgs.gov/pub/data/nationalatlas/fedlanp020_nt00012.tar.gz
+~~~~
+
+##### Untar shapefile
+~~~~
 $ tar -xvzf fedlanp020_nt00012.tar.gz
 fedlanp020.dbf
 fedlanp020.shp
@@ -379,7 +409,7 @@ fedlanp020.shx
 fedlanp020.txt
 ~~~~
 
-## Populate fedland_orig table from shapefile
+##### Populate fedland_orig table from shapefile
 
 ~~~~
 $ shp2pgsql -s 4326 ~/download/fedlanp020.shp public.fedland_orig | psql -d geodevdb -U geodevdb
@@ -405,16 +435,17 @@ geodevdb=# \dt
 geodevdb=# \q
 $ logout
 ~~~~
+Login in as geodevadmin.
 
-#VM 2 created
-
-## Run knexjs migrate
+##### Install Knex.js globally
 ~~~~
-$ cd app/geodev-node-rest
+geodevadmin $ cd app/geodev-node-rest
 $ npm install knex -g
 ~~~~
 
-This will create the fedland table in geodevdb
+##### Run knexjs migrate
+
+This will create the fedland and owner table in geodevdb.
 ~~~~
 $ knex migrate:latest
 Using environment: development
@@ -422,7 +453,7 @@ Batch 1 run: X migrations
 ...
 ~~~~
 
-Check to see that fedland table was created by the migration.
+##### Check to see that fedland table was created by the migration.
 ~~~~
 $ sudo -i -u geodevdb
 $ psql
@@ -436,10 +467,9 @@ geodevdb=# select * from owner;
  id | owner_code | owner | color | orderby
 ----+------------+-------+-------+---------
 (0 rows)
-
 ~~~~
 
-## Populate fedland table
+#####  Populate fedland table from fedland_orig
 
 ~~~~
 geodevdb=#
@@ -448,7 +478,9 @@ select gid as id, ST_AsGeoJSON(geom, 3) as geojson, feature1 as owner, agbur as 
 from fedland_orig;
 ~~~~
 
-Create fedland_postgis, this time don't convert the geom to geojson.
+#####  Populate fedland_postgis table from fedland_orig
+
+Create fedland_postgis table, this time don't convert the geom to geojson. Why? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos.
 
 ~~~~
 geodevdb=#
@@ -457,8 +489,7 @@ into fedland_postgis
 from fedland_orig;
 ~~~~
 
-This is the tables you should have...
-
+Final set of tables
 ~~~~
 geodevdb=# \dt
                 List of relations
@@ -474,7 +505,7 @@ geodevdb=# \dt
 (7 rows)
 ~~~~
 
-Populate owner table
+##### Populate owner table
 ~~~~
 INSERT INTO owner (owner_code, owner, color, orderby) VALUES ('BOR', 'Bureau of Reclamation', '#9f4fdb', 1);
 INSERT INTO owner (owner_code, owner, color, orderby) VALUES ('BLM', 'Bureau of Land Management', '#c23d99', 2);
@@ -486,7 +517,8 @@ INSERT INTO owner (owner_code, owner, color, orderby) VALUES ('TVA', 'Tennessee 
 INSERT INTO owner (owner_code, owner, color, orderby) VALUES ('PRI', 'State/Private', '#6B6558', 8);
 ~~~~
 
-Update where owner_code is null to 'PRI'
+##### Update where owner_code is null to 'PRI'
+Why? Accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 ~~~~
 geodevdb=# update fedland set owner_code = 'PRI' where owner_code is null;
 UPDATE 22045
@@ -494,13 +526,17 @@ geodevdb=# update fedland_postgis set owner_code = 'PRI' where owner_code is nul
 UPDATE 22045
 ~~~~
 
-## Export fedland table to csv
+#### Populate MongoDB collections
+
+Basically we are going to export the PostgreSQL tables to csv and then import those csv files into MongoDB collections.
+
+##### Export fedland table to csv
 ~~~~
 geodevdb=# COPY fedland TO '/tmp/fedland.csv' DELIMITER ',' CSV HEADER;
 COPY 49778
 ~~~~
 
-## Export owner table to csv
+##### Export owner table to csv
 ~~~~
 geodevdb=# COPY owner TO '/tmp/owner.csv' DELIMITER ',' CSV HEADER;
 COPY 8
@@ -508,23 +544,22 @@ geodevdb=# \q
 $ logout
 ~~~~
 
-## Import owner.csv into MongoDB
-
+##### Import owner.csv to owners MongoDB collection
 ~~~~
 $ mongoimport -d geodevdb -c owners --type csv --file /tmp/owner.csv --headerline
 2017-07-19T15:42:59.346-0600	connected to: localhost
 2017-07-20T12:51:43.111-0600	imported 8 documents
 ~~~~
 
-## Import fedland.csv into MongoDB
-
+##### Import fedland.csv to fedlands MongoDB collection
 ~~~~
 $ mongoimport -d geodevdb -c fedlands --type csv --file /tmp/fedland.csv --headerline
 2017-07-19T15:42:59.346-0600	connected to: localhost
 2017-07-19T15:43:02.332-0600	imported 49778 documents
 ~~~~
 
-## Parse the geojson column in mongodb
+##### Parse the geojson column in mongodb
+Why? Accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt.
 ~~~~
 $ mongo
 > use geodevdb
@@ -535,10 +570,59 @@ $ mongo
 > exit
 ~~~~
 
-Restart app
+#### REST API
 
+Start server
 ~~~~
-geodevdb=#
 $ cd ~/app/geodev-node-rest
 $ node server
 ~~~~
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
+API routes:
+~~~~
+/ownerP
+/ownerM
+/asdfsad/
+~~~~
+
+##### PostGIS tricks
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+~~~~
+select id, ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom,simplification),geojson_digits) as geojson, owner, owner_code, name, state, state_fips
+from fedland_postgis
+where owner_code = owner_code'
+AND ST_SimplifyPreserveTopology(geom, " + simplification + ") && ST_MakeEnvelope(left_lng, bottom_lat, right_lng, top_lat, srid);
+~~~~
+
+### Front end
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+
+#### Vue
+https://vuejs.org/
+
+Vue.js is open-source progressive JavaScript framework for building user interfaces.
+
+#### Leaflet
+http://leafletjs.com/
+
+Leaflet.js is a leading open-source JavaScript library for mobile-friendly interactive maps.
+
+#### Bootstrap
+Bootstrap is a popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web](http://getbootstrap.com/)
+
+### Utilities
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+
+#### Postman
+https://www.getpostman.com/
+
+Powerful HTTP client for testing web services. eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+
+#### Oracle Virtualbox
+https://www.virtualbox.org/
+
+Oracle Virtual box is Virtual Machine software that can be used to install this stack.
