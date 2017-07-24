@@ -1,23 +1,24 @@
 # GeoWebStack
 
-### Project Background
+## Project Background
 Building a geospatial web development stack. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.
 
 Demo [map](http://104.236.16.91:8641/):
 
 ![http://104.236.16.91:8641/](http://storage6.static.itmages.com/i/17/0724/h_1500923403_9513361_eba9dd45f7.png)
 
-### Web Stack
+## Web Stack
 * Operating System
   * Linux 17.04 minimal install
+  * Virtual machine setup (optional)
   * geodevadmin user setup
 * Backend:
   * Databases
-    * PostgreSQL - https://www.postgresql.org/
-      * PostGIS - http://postgis.net/
-    * MongoDB - https://www.mongodb.com/
-  * REST API - https://en.wikipedia.org/wiki/Representational_state_transfer
-    * GeoJSON - http://geojson.org/
+    * [PostgreSQL](https://www.postgresql.org/) - PostgreSQL is a powerful, open source object-relational database system
+      * [PostGIS](http://postgis.net/) - Geospatial database extender for PostgreSQL
+    * [MongoDB](https://www.mongodb.com/) - Document database (noSQL) based on scalability and flexibility
+  * [REST API](https://en.wikipedia.org/wiki/Representational_state_transfer) - way of providing interoperability between computer systems on the Internet
+    * [GeoJSON](http://geojson.org/) - Javascript format for encoding a variety of geographic data structures
 * Web server
   * Node.js - https://nodejs.org/ - Runtime built on Chrome's V8 JavaScript engine
     * Express.js - https://expressjs.com/ - Fast, unopinionated, minimalist web framework for Node.js
@@ -33,7 +34,7 @@ Demo [map](http://104.236.16.91:8641/):
   * Postman - https://www.getpostman.com/ - Powerful HTTP client for testing web services.
   * Oracle VirtualBox - https://www.virtualbox.org/
 
-#### Operating System
+### Operating System
 
 Why Linux? Digital Ocean? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 
@@ -41,7 +42,7 @@ Why Linux? Digital Ocean? At vero eos et accusamus et iusto odio dignissimos duc
 * https://help.ubuntu.com/community/Installation/MinimalCD
   * http://archive.ubuntu.com/ubuntu/dists/zesty/main/installer-amd64/current/images/netboot/mini.iso
 
-##### Virtual box setup
+#### Virtual machine setup
 
 If you are using a virtual machine to build this stack...At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores. Port forwarding information if server is on a VirtualBox virtual machine.
 https://www.virtualbox.org/wiki/VirtualBox
@@ -52,7 +53,7 @@ VBoxManage modifyvm "geodev" --natpf1 "guestssh,tcp,,2222,,22"
 VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
 ~~~~
 
-##### Admin user setup (geodevadmin)
+#### Admin user setup (geodevadmin)
 
 Set up a sudo user on your system called geodevadmin: https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
 
@@ -62,11 +63,11 @@ $ usermod -aG sudo geodevadmin
 $ sudo -i -u geodevadmin
 ~~~~
 
-#### Backend
+### Backend
 
 Why GeoJSON vs. PostgreSQL vs. PostGIS vs. MongoDB? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 
-##### PostgreSQL
+#### PostgreSQL
 
 Install PostgreSQL.
 
@@ -75,7 +76,7 @@ $ sudo apt-get update
 $ sudo apt-get install postgresql postgresql-contrib
 ~~~~
 
-##### PostGIS
+#### PostGIS
 
 Install PostGIS Extension.
 
@@ -83,7 +84,7 @@ Install PostGIS Extension.
 $ sudo apt-get install postgis
 ~~~~
 
-##### Create geodevdb database and role/user
+#### Create geodevdb database and role/user
 
 ~~~~
 $ sudo -i -u postgres
@@ -92,12 +93,12 @@ Enter name of role to add: geodevdb
 Shall the new role be a superuser? (y/n) y
 ~~~~
 
-##### Create geodevdb database
+#### Create geodevdb database
 ~~~~
 $ createdb geodevdb
 ~~~~
 
-##### Set geodevdb database password
+#### Set geodevdb database password
 ~~~~
 $ psql
 psql (9.6.3)
@@ -105,13 +106,12 @@ Type "help" for help.
 postgres=# ALTER USER geodevdb WITH PASSWORD 'admin123';
 ~~~~
 
-##### Set geodevdb ownership
+#### Set geodevdb ownership
 ~~~~
 postgres=# ALTER DATABASE geodevdb OWNER TO geodevdb;
 postgres=# \q
 $ logout
 ~~~~
-
 Log back in as geodevadmin
 ~~~~
 $ sudo adduser geodevdb
@@ -125,20 +125,19 @@ Retype new UNIX password: admin123
 passwd: password updated successfully
 Changing the user information for geodevdb
 Enter the new value, or press ENTER for the default
-	Full Name []:
+	Full Name []:##
 	Room Number []:
 	Work Phone []:
 	Home Phone []:
 	Other []:
 Is the information correct? [Y/n]
 ~~~~
-
 Make geodevdb a sudoer
 ~~~~
 $ sudo usermod -aG sudo geodevdb
 ~~~~
 
-##### Enable PostGIS spatial Features
+#### Enable PostGIS spatial Features
 ~~~~
 geodevadmin@geodev:~$ sudo -i -u postgres
 postgres@geodev:~$ psql -d geodevdb
@@ -157,7 +156,7 @@ geodevdb=# \q
 $ logout
 ~~~~
 
-##### Optimize PostgreSQL for GIS Database Objects
+#### Optimize PostgreSQL for GIS Database Objects
 
 ~~~~
 $ sudo nano /etc/postgresql/9.6/main/postgresql.conf
@@ -169,7 +168,7 @@ wal_keep_segments = 6                   # in logfile segments, 16MB each; 0 disa
 random_page_cost = 2.0                  # same scale as above
 ~~~~
 
-##### Allow connections to geodevdb
+#### Allow connections to geodevdb
 
 ~~~~
 $ sudo nano /etc/postgresql/9.6/main/pg_hba.conf
@@ -180,7 +179,7 @@ host     all             geodevdb        0.0.0.0/0               md5
 $ sudo service postgresql restart
 ~~~~
 
-## Install MongoDB
+#### Install MongoDB
 
 Based on: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
 
