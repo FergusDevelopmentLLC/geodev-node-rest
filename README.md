@@ -10,6 +10,7 @@ Demo [map](http://104.236.16.91:8641/):
 ### Web Stack
 * Operating System
   * Linux 17.04 minimal install
+  * geodevadmin user setup
 * Backend:
   * Databases
     * PostgreSQL - https://www.postgresql.org/
@@ -34,31 +35,36 @@ Demo [map](http://104.236.16.91:8641/):
 
 #### Operating System
 
+Why Linux? Digital Ocean? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
 * Ubuntu 17.04 "Zesty Zapus"
 * https://help.ubuntu.com/community/Installation/MinimalCD
-* http://archive.ubuntu.com/ubuntu/dists/zesty/main/installer-amd64/current/images/netboot/mini.iso
+  * http://archive.ubuntu.com/ubuntu/dists/zesty/main/installer-amd64/current/images/netboot/mini.iso
 
-  Port forwarding information if server is on a VirtualBox virtual machine.
-  https://www.virtualbox.org/wiki/VirtualBox
+##### Virtual box setup
 
-  ~~~~
-  on host...
-  VBoxManage modifyvm "geodev" --natpf1 "guestssh,tcp,,2222,,22"
-  VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
-  ~~~~
+If you are using a virtual machine to build this stack...At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores. Port forwarding information if server is on a VirtualBox virtual machine.
+https://www.virtualbox.org/wiki/VirtualBox
 
-  * https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
-assumes that you have a Sudo user on your system called geodevadmin
+on host...
+~~~~
+VBoxManage modifyvm "geodev" --natpf1 "guestssh,tcp,,2222,,22"
+VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
+~~~~
 
-  ~~~~
-  $ sudo adduser geodevadmin
-  $ usermod -aG sudo geodevadmin
-  $ sudo -i -u geodevadmin
-  ~~~~
+##### Admin user setup (geodevadmin)
+
+Set up a sudo user on your system called geodevadmin: https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
+
+~~~~
+$ sudo adduser geodevadmin
+$ usermod -aG sudo geodevadmin
+$ sudo -i -u geodevadmin
+~~~~
 
 #### Backend
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+Why GeoJSON vs. PostgreSQL vs. PostGIS vs. MongoDB? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 
 ##### PostgreSQL
 
