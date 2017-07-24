@@ -1,20 +1,31 @@
 # GeoWebStack
-### Notes on building a geospatial web development stack
 
-Table of contents
-* [Target Web Stack](#target-web-stack)
-* [OS] (#linux-version)
+Building a geospatial web development stack
 
 ## Target Web Stack
-* OS - Linux 17.04 minimal install
-* Databases
-  * PostgreSql / PostGIS - https://www.postgresql.org/ / http://postgis.net/
-  * MongoDB - https://www.mongodb.com/
+* Operating System
+  * Linux 17.04 minimal install
+* Backend:
+  * Databases
+    * PostgreSQL - https://www.postgresql.org/
+      * PostGIS - http://postgis.net/
+    * MongoDB - https://www.mongodb.com/
+  * REST API - https://en.wikipedia.org/wiki/Representational_state_transfer
+    * GeoJSON - http://geojson.org/
 * Web server
-  * Node.js - https://nodejs.org/
-    * Express - https://expressjs.com/
-* css framework - http://getbootstrap.com/css/bootstrap
-* mapping library - leaflet - http://leafletjs.com/
+  * Node.js - https://nodejs.org/ - Runtime built on Chrome's V8 JavaScript engine
+    * Express.js - https://expressjs.com/ - Fast, unopinionated, minimalist web framework for Node.js
+      * ORMs
+        * Knex.js - http://knexjs.org/ - Query builder for PostgreSQL, MySQL and SQLite3, designed to be flexible, portable, and fun to use
+        * Mongoose.js http://mongoosejs.com/ - Elegant mongodb object modeling for node.js
+    * Joi.js - https://github.com/hapijs/joi - Object schema description language and validator for JavaScript objects
+* Front end
+  * Vue.js - https://vuejs.org/ - Open-source progressive JavaScript framework for building user interfaces
+  * Leaflet.js - http://leafletjs.com/ - Leading open-source JavaScript library for mobile-friendly interactive maps
+  * Bootstrap - http://getbootstrap.com/ - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web
+* Utilities
+  * Postman - https://www.getpostman.com/ - Powerful HTTP client for testing web services.
+  * Oracle VirtualBox - https://www.virtualbox.org/
 
 ## OS
 
