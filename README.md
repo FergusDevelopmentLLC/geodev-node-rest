@@ -8,31 +8,31 @@ Demo [map](http://104.236.16.91:8641/):
 ![http://104.236.16.91:8641/](http://storage6.static.itmages.com/i/17/0724/h_1500923403_9513361_eba9dd45f7.png)
 
 ## Web Stack
-* Operating System
+* [Operating System](#operating-system)
   * Linux 17.04 minimal install
-  * Virtual machine setup (optional)
-  * geodevadmin user setup
-* Backend:
-  * Databases
-    * [PostgreSQL](https://www.postgresql.org/) - PostgreSQL is a powerful, open source object-relational database system
-      * [PostGIS](http://postgis.net/) - Geospatial database extender for PostgreSQL
-    * [MongoDB](https://www.mongodb.com/) - Document database (noSQL) based on scalability and flexibility
+    * [Virtual machine setup (optional)](#virtual-machine-setup)
+    * [Sudo user setup (geodevadmin)](#sudo-user-setup-geodevadmin)
+* [Backend](#backend)
+  * [PostgreSQL](#postgresql) - [Powerful, open source object-relational database system](https://www.postgresql.org/)
+    * [PostGIS](#postgis) - [Geospatial database extender for PostgreSQL](http://postgis.net/)
+    * [PostgreSQL database administration](#postgresql-database-administration)
+  * [MongoDB](#mongodb) - [Document database (noSQL) based on scalability and flexibility](https://www.mongodb.com/)
   * [REST API](https://en.wikipedia.org/wiki/Representational_state_transfer) - way of providing interoperability between computer systems on the Internet
     * [GeoJSON](http://geojson.org/) - Javascript format for encoding a variety of geographic data structures
 * Web server
-  * Node.js - https://nodejs.org/ - Runtime built on Chrome's V8 JavaScript engine
-    * Express.js - https://expressjs.com/ - Fast, unopinionated, minimalist web framework for Node.js
+  * [Node.js](https://nodejs.org/) - Runtime built on Chrome's V8 JavaScript engine
+    * [Express.js](https://expressjs.com/) - Fast, unopinionated, minimalist web framework for Node.js
       * ORMs
-        * Knex.js - http://knexjs.org/ - Query builder for PostgreSQL, MySQL and SQLite3, designed to be flexible, portable, and fun to use
-        * Mongoose.js http://mongoosejs.com/ - Elegant mongodb object modeling for node.js
-    * Joi.js - https://github.com/hapijs/joi - Object schema description language and validator for JavaScript objects
-* Front end
-  * Vue.js - https://vuejs.org/ - Open-source progressive JavaScript framework for building user interfaces
-  * Leaflet.js - http://leafletjs.com/ - Leading open-source JavaScript library for mobile-friendly interactive maps
-  * Bootstrap - http://getbootstrap.com/ - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web
+        * [Knex.js](http://knexjs.org/) - Query builder for PostgreSQL, MySQL and SQLite3, designed to be flexible, portable, and fun to use
+        * [Mongoose.js](http://mongoosejs.com/) - Elegant mongodb object modeling for node.js
+    * [Joi.js](https://github.com/hapijs/joi) - Object schema description language and validator for JavaScript objects
+* Front-end
+  * [Vue.js](https://vuejs.org/) - Open-source progressive JavaScript framework for building user interfaces
+  * [Leaflet.js](http://leafletjs.com/) - Leading open-source JavaScript library for mobile-friendly interactive maps
+  * [Bootstrap](http://getbootstrap.com/) - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web
 * Utilities
-  * Postman - https://www.getpostman.com/ - Powerful HTTP client for testing web services.
-  * Oracle VirtualBox - https://www.virtualbox.org/
+  * [Postman](https://www.getpostman.com/) - Powerful HTTP client for testing web services
+  * [Oracle VirtualBox](https://www.virtualbox.org/) - Virtual Machine
 
 ### Operating System
 
@@ -47,15 +47,25 @@ Why Linux? Digital Ocean? At vero eos et accusamus et iusto odio dignissimos duc
 If you are using a virtual machine to build this stack...At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores. Port forwarding information if server is on a VirtualBox virtual machine.
 https://www.virtualbox.org/wiki/VirtualBox
 
-on host...
+This will allow you to make SSH connections to your vm on port 2222 (22 is standard)
 ~~~~
 VBoxManage modifyvm "geodev" --natpf1 "guestssh,tcp,,2222,,22"
+~~~~
+
+This will allow you to hit the web server at a localhost url:
+
+http://127.0.0.1:18641 (on host) = http://127.0.0.1:8641 (on vm)
+~~~~
 VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
 ~~~~
 
-#### Admin user setup (geodevadmin)
+#### Sudo user setup (geodevadmin)
 
-Set up a sudo user on your system called geodevadmin: https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
+This project assumes you have a Sudo user on your system named:
+geodevadmin
+
+Source:
+https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
 
 ~~~~
 $ sudo adduser geodevadmin
@@ -78,13 +88,17 @@ $ sudo apt-get install postgresql postgresql-contrib
 
 #### PostGIS
 
-Install PostGIS Extension.
+Install PostGIS extension.
 
 ~~~~
 $ sudo apt-get install postgis
 ~~~~
 
-#### Create geodevdb database and role/user
+#### PostgreSQL database administration
+
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
+##### Create geodevdb database and role/user
 
 ~~~~
 $ sudo -i -u postgres
@@ -93,12 +107,12 @@ Enter name of role to add: geodevdb
 Shall the new role be a superuser? (y/n) y
 ~~~~
 
-#### Create geodevdb database
+##### Create geodevdb database
 ~~~~
 $ createdb geodevdb
 ~~~~
 
-#### Set geodevdb database password
+##### Set geodevdb database password
 ~~~~
 $ psql
 psql (9.6.3)
@@ -106,7 +120,7 @@ Type "help" for help.
 postgres=# ALTER USER geodevdb WITH PASSWORD 'admin123';
 ~~~~
 
-#### Set geodevdb ownership
+##### Set geodevdb ownership
 ~~~~
 postgres=# ALTER DATABASE geodevdb OWNER TO geodevdb;
 postgres=# \q
@@ -137,7 +151,7 @@ Make geodevdb a sudoer
 $ sudo usermod -aG sudo geodevdb
 ~~~~
 
-#### Enable PostGIS spatial Features
+##### Enable PostGIS spatial Features
 ~~~~
 geodevadmin@geodev:~$ sudo -i -u postgres
 postgres@geodev:~$ psql -d geodevdb
@@ -156,7 +170,7 @@ geodevdb=# \q
 $ logout
 ~~~~
 
-#### Optimize PostgreSQL for GIS Database Objects
+##### Optimize PostgreSQL for GIS Database Objects
 
 ~~~~
 $ sudo nano /etc/postgresql/9.6/main/postgresql.conf
@@ -168,7 +182,7 @@ wal_keep_segments = 6                   # in logfile segments, 16MB each; 0 disa
 random_page_cost = 2.0                  # same scale as above
 ~~~~
 
-#### Allow connections to geodevdb
+##### Allow connections to geodevdb
 
 ~~~~
 $ sudo nano /etc/postgresql/9.6/main/pg_hba.conf
@@ -179,9 +193,11 @@ host     all             geodevdb        0.0.0.0/0               md5
 $ sudo service postgresql restart
 ~~~~
 
-#### Install MongoDB
+#### MongoDB
 
-Based on: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
+Install Mongodb.
+
+Source: https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/
 
 ~~~~
 $ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
@@ -203,10 +219,22 @@ $ mongod
 2017-07-19T12:18:34.084-0600 I NETWORK  [thread1] waiting for connections on port 27017
 ~~~~
 
-Create a new terminal window.
-ssh geodevadmin@127.0.0.1 -p 2222
+#### REST API
 
-## Install Nodejs with nvm
+At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
+API routes:
+~~~~
+/ownerP
+/ownerM
+/asdfsad/
+~~~~
+
+
+### Node.js
+
+Install Nodejs with nvm
+
 ~~~~
 $ mkdir download
 $ cd download
