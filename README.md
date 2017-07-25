@@ -1,18 +1,20 @@
 ## Project Background
-Building a geospatial web development stack. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.
+
+Building a geospatial web development stack. The purpose of this project was to build a geospatial enabled web stack from Operating System to final web map. A goal was to touch as many modern frameworks as possible. In short, this project is primarily a REST api that serves complex GeoJSON polygons from various sources. The front-end of the application communicates with the REST API to get data and display on a Leaflet.js map. I wanted to compare performance between static GeoJSON files on the server, PostgreSQL/PostGIS queries and queries from MongoDB, a fast noSQL document database.
 
 Demo [map](http://104.236.16.91:8641/):
 
 ![http://104.236.16.91:8641/](http://storage6.static.itmages.com/i/17/0724/h_1500923403_9513361_eba9dd45f7.png)
 
+![](http://storage9.static.itmages.com/i/17/0725/h_1500998724_1432167_ebce238242.png)
+
 ## Web Stack
 * [Operating System](#operating-system)
   * Linux 17.04 minimal install
-    * [Virtual machine setup (optional)](#virtual-machine-setup)
     * [Sudo user setup (geodevadmin)](#sudo-user-setup-geodevadmin)
 * [Backend](#backend)
-  * [PostgreSQL](#postgresql) - [Powerful, open source object-relational database system](https://www.postgresql.org/)
-    * [PostGIS](#postgis) - [Geospatial database extender for PostgreSQL](http://postgis.net/)
+  * [PostgreSQL](#install-postgresql) - [Powerful, open source object-relational database system](https://www.postgresql.org/)
+    * [PostGIS](#install-postgis) - [Geospatial database extender for PostgreSQL](http://postgis.net/)
     * [PostgreSQL database administration](#postgresql-database-administration)
   * [MongoDB](#mongodb) - [Document database (noSQL) based on scalability and flexibility](https://www.mongodb.com/)
 * [Web server](#web-server)
@@ -45,27 +47,26 @@ Why Linux? Digital Ocean? At vero eos et accusamus et iusto odio dignissimos duc
 * https://help.ubuntu.com/community/Installation/MinimalCD
   * http://archive.ubuntu.com/ubuntu/dists/zesty/main/installer-amd64/current/images/netboot/mini.iso
 
-#### Virtual machine setup
+##### Virtual machine setup
 
-If you are using a virtual machine to build this stack...At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores. Port forwarding information if server is on a VirtualBox virtual machine.
+If you are using a virtual machine to build this stack, the following commands are useful in order to communicate to you virtual machine via SSH, and to see the final rendered map.
+
 https://www.virtualbox.org/wiki/VirtualBox
 
-This will allow you to make SSH connections to your vm on port 2222 (22 is standard)
+Allows SSH connections to your virtual machine from your host on port 2222 (22 default SSH port).
 ~~~~
 VBoxManage modifyvm "geodev" --natpf1 "guestssh,tcp,,2222,,22"
 ~~~~
 
-This will allow you to hit the web server at a localhost url:
-
-http://127.0.0.1:18641 (on host) = http://127.0.0.1:8641 (on vm)
+Allow browsing to map from host at the url: http://127.0.0.1:18641
 ~~~~
 VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
 ~~~~
+http://127.0.0.1:18641 (on host) => http://127.0.0.1:8641 (on virtual machine)
 
 #### Sudo user setup (geodevadmin)
 
-This project assumes you have a Sudo user on your system named:
-geodevadmin
+This project assumes you have a Sudo user on your system (geodevadmin)
 
 Source:
 https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
@@ -80,18 +81,14 @@ $ sudo -i -u geodevadmin
 
 Why GeoJSON vs. PostgreSQL vs. PostGIS vs. MongoDB? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 
-#### PostgreSQL
-
-Install PostgreSQL.
+#### Install PostgreSQL
 
 ~~~~
 $ sudo apt-get update
 $ sudo apt-get install postgresql postgresql-contrib
 ~~~~
 
-#### PostGIS
-
-Install PostGIS extension.
+#### Install PostGIS extension.
 
 ~~~~
 $ sudo apt-get install postgis
