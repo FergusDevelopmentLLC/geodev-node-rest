@@ -19,17 +19,17 @@ Data for map originates from 4 sources, and can be switched with the buttons in 
   * Linux 17.04 minimal install
     * [Sudo user setup (geodevadmin)](#sudo-user-setup-geodevadmin)
 * [Backend](#backend)
-  * [PostgreSQL](#install-postgresql) - [Powerful, open source object-relational database system](https://www.postgresql.org/)
-    * [PostGIS](#install-postgis) - [Geospatial database extender for PostgreSQL](http://postgis.net/)
+  * [PostgreSQL](#install-postgresql) - Powerful, open source object-relational database system. [link](https://www.postgresql.org/)
+    * [PostGIS](#install-postgis) - Geospatial database extender for PostgreSQL. [link](http://postgis.net/)
     * [PostgreSQL database administration](#postgresql-database-administration)
-  * [MongoDB](#mongodb) - [Document database (noSQL) based on scalability and flexibility](https://www.mongodb.com/)
-* [Web server](#web-server)
-  * [Node.js](#nodejs) - [Runtime built on Chrome's V8 JavaScript engine](https://nodejs.org/)
-  * [Git](#git) - [Version control system](https://git-scm.com/)
-  * [geodev-node-rest application](#install-geodev-node-rest-application)
+  * [MongoDB](#mongodb) - Document database (noSQL) based on scalability and flexibility. [link](https://www.mongodb.com/)
+* [Web framework](#web-framework)
+  * [Node.js](#nodejs) - Runtime built on Chrome's V8 JavaScript engine. [link](https://nodejs.org/)
+  * [Git](#git) - Version control. [link](https://git-scm.com/)
+  * [geodev-node-rest application](#install-geodev-node-rest-application) [link](https://github.com/FergusDevelopmentLLC/geodev-node-rest)
     * [Application set up](#application-set-up)
     * [Key Packages](#key-packages)
-      * [Express.js](#express) - [Web framework for Node.js](https://expressjs.com/)
+      * [Express.js](#express) - Web framework for Node.js. [link]](https://expressjs.com/)
       * [Knex.js](#knex) - [Query builder for PostgreSQL/Node.js](http://knexjs.org/)
       * [Mongoose.js](#mongoose) - [Object modeler for MongoDB/Node.js](http://mongoosejs.com/)
       * [Joi.js](#joi) - [Validator for JavaScript objects](http://mongoosejs.com/)
@@ -209,7 +209,7 @@ $ sudo service postgresql restart
 
 #### MongoDB
 
-Why MongoDB? I was interested in implementing a noSQL document database to see if there was any performance difference. MongoDB was easy to set up, populate and integrate into the project. It doesn't have the geospatial query capabilities that PostGIS has, but it does have intersection plus others: https://docs.mongodb.com/manual/reference/operator/query-geospatial/
+Why MongoDB? I was interested in implementing a noSQL document database to see if there was any performance difference. MongoDB was easy to set up, populate and integrate into the project. It seemed to be a natural database for Node.js. It doesn't have the geospatial query capabilities that PostGIS has, but it does have intersection plus others: https://docs.mongodb.com/manual/reference/operator/query-geospatial/
 
 Install Mongodb.
 
@@ -237,7 +237,7 @@ $ mongod
 
 ### Web Server
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+Node.js and Express.js were an early choice for the project. I wanted to keep the project completely JavaScript if possible. Node.js/
 
 #### Node.js
 
