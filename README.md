@@ -6,11 +6,14 @@ Demo [map](http://104.236.16.91:8641/):
 
 ![http://104.236.16.91:8641/](http://storage6.static.itmages.com/i/17/0724/h_1500923403_9513361_eba9dd45f7.png)
 
-Data for map originates from 4 sources, and can be switched with the buttons in the legend.
-  * Static GeoJSON files
-  * Dynamic geospatial PostGIS query using ST_SimplifyPreserveTopology and ST_MakeEnvelope
-  * Non-dynamic PostgreSQL query for comparison to MongoDB
-  * Non-dynamic MongoDB query
+Federal land geojson polygons can be shown/hidden by clicking the checkboxes. There are 4 data sources, which can be be switched with the buttons in the legend.
+
+  * GEOJSON static files on the web server
+  * POSTGIS Geospatial queries
+    * ST_SimplifyPreserveTopology and ST_MakeEnvelope used
+    * Requires query on each map zoom/pan
+  * POSTGRESQL queries (no PostGIS) for comparison to MongoDB
+  * MONGODB queries
 
 ![](http://storage9.static.itmages.com/i/17/0725/h_1500998724_1432167_ebce238242.png)
 
@@ -29,7 +32,7 @@ Data for map originates from 4 sources, and can be switched with the buttons in 
   * [Install geodev-node-rest application](#install-geodev-node-rest-application)
     * [Application set up](#application-set-up)
     * [Key Packages](#key-packages)
-      * [Express.js](#express) - Web framework for Node.js. [link]](https://expressjs.com/)
+      * [Express.js](#express) - Web framework for Node.js. [link](https://expressjs.com/)
       * [Knex.js](#knex) - Query builder for PostgreSQL/Node.js. [link](http://knexjs.org/)
       * [Mongoose.js](#mongoose) - Object modeler for MongoDB/Node.js. [link](http://mongoosejs.com/)
       * [Joi.js](#joi) - Validator for JavaScript objects. [link](http://mongoosejs.com/)
@@ -54,11 +57,9 @@ Ubuntu Linux was chosen primarily because it is free and open source. The target
 * https://help.ubuntu.com/community/Installation/MinimalCD
   * http://archive.ubuntu.com/ubuntu/dists/zesty/main/installer-amd64/current/images/netboot/mini.iso
 
-##### Virtual machine setup
+##### Virtual machine setup (optional)
 
-If you are using a virtual machine to build this stack, the following commands are useful in order to communicate to you virtual machine via SSH, and to see the final rendered map.
-
-Recommended VM software: https://www.virtualbox.org/wiki/VirtualBox
+If you are using VirtualBox virtual machine to build this stack, the following commands are useful in order to communicate to you virtual machine via SSH from your host, and to browse to the final rendered map from your host. https://www.virtualbox.org/wiki/VirtualBox
 
 Allows SSH connections to your virtual machine from your host on port 2222 (22 default SSH port). http://127.0.0.1:18641 (on host) => http://127.0.0.1:8641 (on virtual machine).
 
@@ -79,7 +80,7 @@ Source:
 https://www.digitalocean.com/community/tutorials/how-to-create-a-sudo-user-on-ubuntu-quickstart
 
 ~~~~
-$ sudo adduser geodevadmin
+geodevadmin $ sudo adduser geodevadmin
 $ usermod -aG sudo geodevadmin
 $ sudo -i -u geodevadmin
 ~~~~
@@ -240,10 +241,11 @@ $ mongod
 
 Node.js and Express.js were an early choice for the project. I wanted to keep the project completely JavaScript if possible. I have been impressed with the easy of deployment and the utility of NPM and Yarn.
 
-#### Node.js
+#### NVM
 
-Install Node.js with [nvm](https://github.com/creationix/nvm). NVM - Node Version Manager. Manage multiple active node.js versions.
+[NVM](https://github.com/creationix/nvm) is a Node.js version manager. It helps to install and keep track of multiple Node.js versions.
 
+#### Install NVM
 ~~~~
 $ mkdir download
 $ cd download
@@ -253,16 +255,8 @@ $ bash install_nvm.sh
 => Downloading nvm from git to '/home/geodevadmin/.nvm'
 => Cloning into '/home/geodevadmin/.nvm'...
 remote: Counting objects: 6492, done.
-remote: Compressing objects: 100% (14/14), done.
-remote: Total 6492 (delta 7), reused 10 (delta 3), pack-reused 6475
-Receiving objects: 100% (6492/6492), 1.95 MiB | 0 bytes/s, done.
-Resolving deltas: 100% (4023/4023), done.
-* (HEAD detached at v0.33.2)
-  master
-=> Compressing and cleaning up git repository
-Counting objects: 6492, done.
-Compressing objects: 100% (6448/6448), done.
-Writing objects: 100% (6492/6492), done.
+...
+...
 Total 6492 (delta 4285), reused 2001 (delta 0)
 
 => Appending nvm source string to /home/geodevadmin/.bashrc
@@ -276,10 +270,34 @@ export NVM_DIR="$HOME/.nvm"
 $ logout
 ~~~~
 
-log in as geodevadmin
+Login as geodevadmin.
+
+This will list you the available node versions.
+~~~~
+geodevadmin $ nvm ls-remote
+~~~~
+
+We need to install Node.js version 7.6.0 for this project. Why?
+
+In controllers/fedlandP.js, in the getFedlandPForOwnerCode method (below) we return a federal land polygon collection for a passed ownercode. This method is marked async (asyncronous javascript).
 
 ~~~~
-$ nvm ls-remote
+getFedlandPForOwnerCode: async (req, res, next) => {
+  var ownercode = req.value.params.ownercode;
+
+  const fedlands = await FedlandP
+    .query()
+    .where('owner_code', ownercode);
+
+  var fedlandsFC = getFeatureCollectionFor(fedlands);
+  res.status(200).json(fedlandsFC);
+}
+~~~~
+
+We need to use Node.js version 7.6.0 in order to use async / await in the project. More details here: http://stackabuse.com/node-js-async-await-in-es7/
+
+##### Install Node.js version 7.6.0
+~~~~
 $ nvm install 7.6.0
 Downloading and installing node v7.6.0...
 Downloading https://nodejs.org/dist/v7.6.0/node-v7.6.0-linux-x64.tar.xz...
@@ -292,14 +310,14 @@ Creating default alias: default -> 7.6.0 (-> v7.6.0)
 
 #### Git
 
-Install Git.
+If the version control package, Git, was not installed previously install it now.
 ~~~~
 $ sudo apt-get install git
 ~~~~
 
 #### Install geodev-node-rest application
 
-Install geodev-node-rest application. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+Install THIS geodev-node-rest application from github.
 
 ~~~~
 $ mkdir app
@@ -315,7 +333,7 @@ Resolving deltas: 100% (114/114), done.
 
 #### Application set up
 
-Jiusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio
+The set up steps below are required for the application to run.
 
 ##### Grant geodevadmin ownership of geodev-node-rest
 ~~~~
@@ -323,28 +341,31 @@ $ sudo chown -R geodevadmin /home/geodevadmin/app/geodev-node-rest
 ~~~~
 
 ##### Install packages via NPM
+
+This will install all the packages needed.
+
 ~~~~
 $ cd geodev-node-rest/
 $ npm install
 ~~~~
 
 ##### Download static geojson archive
+
+For the GEOJSON route, the app will use the GeoJSON files in the /home/geodevadmin/app/geodev-node-rest/public/data/ folder. Download an archive of them. They are large files .gitignore(d) from the repository.
+
 ~~~~
 $ cd public/data
 $ wget http://104.236.16.91:8641/data/fedland_geojson.tar.gz
 ~~~~
 
 ##### Untar to get individual GeoJSON files
-
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
-
 ~~~~
 $ tar xvf fedland_geojson.tar.gz
 ~~~~
 
 ##### Add knexfile.js
 
-Dodio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+This is another file .gitignore(d) from the repository. It controls the username and password for connecting to the PostgreSQL geodevdb database. There are development and production sections. The app will default to the development settings unless started with specific production settings. More on this later.
 
 ~~~~
 $ sudo nano ~/app/geodev-node-rest/knexfile.js
@@ -382,11 +403,21 @@ module.exports = {
 
 #### Key packages
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+The following list highlights key packages as part of the application and why they were used.
 
 ##### Express
 
-Express is a web framework for Node.js. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt.
+https://expressjs.com/
+
+Express.js is a popular web framework for Node.js. It allows the app to server the map to a client web browser. Express.js is minimal, flexible and feature rich. Express and the express-promise-router allow for the routes to work in the application, which map to these methots in /routes/fedlandP.js for example.
+
+~~~~
+router.route('/') // http://104.236.16.91:8641/fedlandsP/
+  .get(FedlandPController.index);
+
+router.route('/forOwnerCode/:ownercode') // http://104.236.16.91:8641/fedlandsP/forOwnerCode/TVA
+  .get(validateParam(schemas.ownerCodeSchema, 'ownercode'), FedlandPController.getFedlandPForOwnerCode);
+~~~~
 
 ##### Knex
 

@@ -5,9 +5,6 @@ const { validateParam, validateBody, schemas } = require('../helpers/routeHelper
 router.route('/')
   .get(FedlandMController.index);
 
-router.route('/:fedlandmId') //fedlandsM/xyz
-  .get(validateParam(schemas.idSchema, 'fedlandmId'), FedlandMController.getFedlandM);
-
 router.route('/forOwnerCode/:owner_code') //fedlandsM/forOwnerCode/NPS
   .get(FedlandMController.getFedlandMForOwnerCode);
 

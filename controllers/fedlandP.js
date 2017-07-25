@@ -15,13 +15,6 @@ module.exports = {
     res.status(200).json(fedlands);
   },
 
-  getFedlandP: async (req, res, next) => {
-    const fedland = await FedlandP
-      .query()
-      .findById(req.value.params.id);
-    res.status(200).json(fedland[0]);
-  },
-
   getFedlandPForOwnerCode: async (req, res, next) => {
     var ownercode = req.value.params.ownercode;
 
@@ -36,6 +29,8 @@ module.exports = {
 };
 
 function getFeatureCollectionFor(coll) {
+
+  console.log(coll);
 
   var features = [];
 
