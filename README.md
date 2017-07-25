@@ -26,24 +26,24 @@ Data for map originates from 4 sources, and can be switched with the buttons in 
 * [Web framework](#web-framework)
   * [Node.js](#nodejs) - Runtime built on Chrome's V8 JavaScript engine. [link](https://nodejs.org/)
   * [Git](#git) - Version control. [link](https://git-scm.com/)
-  * [geodev-node-rest application](#install-geodev-node-rest-application) [link](https://github.com/FergusDevelopmentLLC/geodev-node-rest)
+  * [Install geodev-node-rest application](#install-geodev-node-rest-application)
     * [Application set up](#application-set-up)
     * [Key Packages](#key-packages)
       * [Express.js](#express) - Web framework for Node.js. [link]](https://expressjs.com/)
-      * [Knex.js](#knex) - [Query builder for PostgreSQL/Node.js](http://knexjs.org/)
-      * [Mongoose.js](#mongoose) - [Object modeler for MongoDB/Node.js](http://mongoosejs.com/)
-      * [Joi.js](#joi) - [Validator for JavaScript objects](http://mongoosejs.com/)
+      * [Knex.js](#knex) - Query builder for PostgreSQL/Node.js. [link](http://knexjs.org/)
+      * [Mongoose.js](#mongoose) - Object modeler for MongoDB/Node.js. [link](http://mongoosejs.com/)
+      * [Joi.js](#joi) - Validator for JavaScript objects. [link](http://mongoosejs.com/)
   * [Populate PostgreSQL tables](#populate-postgresql-tables)
   * [Populate MongoDB collections](#populate-mongodb-collections)
   * [REST api](#rest-api)
-  * [PostGIS tricks](#postgis-tricks)
+    * [PostGIS route](#postgis-route)
 * [Front-end](#front-end)
-  * [Vue.js](#vue) - [Open-source progressive JavaScript framework for building user interfaces](https://vuejs.org/)
-  * [Leaflet.js](#leaflet) - [Leading open-source JavaScript library for mobile-friendly interactive maps](http://leafletjs.com/)
-  * [Bootstrap](#bootstrap) - [Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web](http://getbootstrap.com/)
+  * [Vue.js](#vue) - Open-source progressive JavaScript framework for building user interfaces. [link](https://vuejs.org/)
+  * [Leaflet.js](#leaflet) - Leading open-source JavaScript library for mobile-friendly interactive maps. [link](http://leafletjs.com/)
+  * [Bootstrap](#bootstrap) - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web. [link](http://getbootstrap.com/)
 * [Utilities](#utilities)
-  * [Postman](#postman) - [Powerful HTTP client for testing web services](https://www.getpostman.com/)
-  * [Oracle VirtualBox](#oracle-virtualbox) - [Virtual Machine](https://www.virtualbox.org/)
+  * [Postman](#postman) - Powerful HTTP client for testing web services. [link](https://www.getpostman.com/)
+  * [Oracle VirtualBox](#oracle-virtualbox) - Virtual Machine. [link](https://www.virtualbox.org/)
 
 ### Operating System
 
@@ -236,9 +236,9 @@ $ mongod
 2017-07-19T12:18:34.084-0600 I NETWORK  [thread1] waiting for connections on port 27017
 ~~~~
 
-### Web Server
+### Web Framework
 
-Node.js and Express.js were an early choice for the project. I wanted to keep the project completely JavaScript if possible. Node.js/
+Node.js and Express.js were an early choice for the project. I wanted to keep the project completely JavaScript if possible. I have been impressed with the easy of deployment and the utility of NPM and Yarn.
 
 #### Node.js
 
