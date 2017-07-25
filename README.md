@@ -27,9 +27,10 @@ Federal land geojson polygons can be shown/hidden by clicking the checkboxes. Th
     * [PostgreSQL database administration](#postgresql-database-administration)
   * [MongoDB](#mongodb) - Document database (noSQL) based on scalability and flexibility. [link](https://www.mongodb.com/)
 * [Web framework](#web-framework)
-  * [Node.js](#nodejs) - Runtime built on Chrome's V8 JavaScript engine. [link](https://nodejs.org/)
+  * [Install NVM](#install-nvm) - Simple bash script to manage multiple active Node.js versions [link](https://github.com/creationix/nvm)
+  * [Install Node.js](#install-node) - Runtime built on Chrome's V8 JavaScript engine. [link](https://nodejs.org/)
   * [Git](#git) - Version control. [link](https://git-scm.com/)
-  * [Install geodev-node-rest application](#install-geodev-node-rest-application)
+  * [Clone geodev-node-rest application](#clone-geodev-node-rest-application)
     * [Application set up](#application-set-up)
     * [Key Packages](#key-packages)
       * [Express.js](#express) - Web framework for Node.js. [link](https://expressjs.com/)
@@ -241,11 +242,10 @@ $ mongod
 
 Node.js and Express.js were an early choice for the project. I wanted to keep the project completely JavaScript if possible. I have been impressed with the easy of deployment and the utility of NPM and Yarn.
 
-#### NVM
+#### Install NVM
 
 [NVM](https://github.com/creationix/nvm) is a Node.js version manager. It helps to install and keep track of multiple Node.js versions.
 
-#### Install NVM
 ~~~~
 $ mkdir download
 $ cd download
@@ -277,26 +277,8 @@ This will list you the available node versions.
 geodevadmin $ nvm ls-remote
 ~~~~
 
-We need to install Node.js version 7.6.0 for this project. Why?
+##### Install Node
 
-In controllers/fedlandP.js, in the getFedlandPForOwnerCode method (below) we return a federal land polygon collection for a passed ownercode. This method is marked async (asyncronous javascript).
-
-~~~~
-getFedlandPForOwnerCode: async (req, res, next) => {
-  var ownercode = req.value.params.ownercode;
-
-  const fedlands = await FedlandP
-    .query()
-    .where('owner_code', ownercode);
-
-  var fedlandsFC = getFeatureCollectionFor(fedlands);
-  res.status(200).json(fedlandsFC);
-}
-~~~~
-
-We need to use Node.js version 7.6.0 in order to use async / await in the project. More details here: http://stackabuse.com/node-js-async-await-in-es7/
-
-##### Install Node.js version 7.6.0
 ~~~~
 $ nvm install 7.6.0
 Downloading and installing node v7.6.0...
@@ -308,6 +290,12 @@ Now using node v7.6.0 (npm v4.1.2)
 Creating default alias: default -> 7.6.0 (-> v7.6.0)
 ~~~~
 
+We need to install Node.js version 7.6.0 for this project. Why?
+
+In controllers/fedlandP.js, in the getFedlandPForOwnerCode method (below) we return a federal land polygon collection for a passed ownercode. This method is marked async (asyncronous javascript). We need to use Node.js version 7.6.0 in order to use async / await in the project. More details here: http://stackabuse.com/node-js-async-await-in-es7/
+
+![](http://storage9.static.itmages.com/i/17/0725/h_1501007615_7213900_d6700020f9.png)
+
 #### Git
 
 If the version control package, Git, was not installed previously install it now.
@@ -315,9 +303,7 @@ If the version control package, Git, was not installed previously install it now
 $ sudo apt-get install git
 ~~~~
 
-#### Install geodev-node-rest application
-
-Install THIS geodev-node-rest application from github.
+#### Clone geodev-node-rest application
 
 ~~~~
 $ mkdir app
@@ -409,15 +395,9 @@ The following list highlights key packages as part of the application and why th
 
 https://expressjs.com/
 
-Express.js is a popular web framework for Node.js. It allows the app to server the map to a client web browser. Express.js is minimal, flexible and feature rich. Express and the express-promise-router allow for the routes to work in the application, which map to these methots in /routes/fedlandP.js for example.
+Express.js is a popular web framework for Node.js. It allows the app to server the map to a client web browser. Express.js is minimal, flexible and feature rich. Express and the express-promise-router allow for the routes to work in the application, which map to these methods in /routes/fedlandP.js for example.
 
-~~~~
-router.route('/') // http://104.236.16.91:8641/fedlandsP/
-  .get(FedlandPController.index);
-
-router.route('/forOwnerCode/:ownercode') // http://104.236.16.91:8641/fedlandsP/forOwnerCode/TVA
-  .get(validateParam(schemas.ownerCodeSchema, 'ownercode'), FedlandPController.getFedlandPForOwnerCode);
-~~~~
+![](http://storage3.static.itmages.com/i/17/0725/h_1501007924_4975495_35ef084978.png)
 
 ##### Knex
 
@@ -620,7 +600,9 @@ $ mongo
 Start server
 ~~~~
 $ cd ~/app/geodev-node-rest
-$ node server
+$ node server.js
+or
+NODE_ENV=production node server.js
 ~~~~
 
 At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
