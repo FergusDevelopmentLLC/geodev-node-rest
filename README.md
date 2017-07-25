@@ -395,7 +395,7 @@ The following list highlights key packages as part of the application and why th
 
 https://expressjs.com/
 
-Express.js is a popular web framework for Node.js. It allows the app to server the map to a client web browser. Express.js is minimal, flexible and feature rich. Express and the express-promise-router allow for the routes to work in the application, which map to these methods in /routes/fedlandP.js for example.
+Express.js is a popular web framework for Node.js that is minimal, flexible and feature rich. It allows the app to serve routes for the REST API and ultimately, the map to a client web browser. For example, here are the routes to serve all the fedlands data and fedlands for a specific owner_code. ([/routes/fedlandsP.js](https://github.com/FergusDevelopmentLLC/geodev-node-rest/blob/master/routes/fedlandsP.js))
 
 ![](http://storage3.static.itmages.com/i/17/0725/h_1501007924_4975495_35ef084978.png)
 
