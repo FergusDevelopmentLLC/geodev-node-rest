@@ -9,10 +9,10 @@ router.route('/')
 router.route('/:ownermid') // /ownersM/xyz
   .get(validateParam(schemas.idSchema, 'ownermid'), OwnerMController.getOwnerM)
   .put([validateParam(schemas.idSchema, 'ownermid'),
-    validateBody(schemas.ownerMSchema)],
+    validateBody(schemas.ownerSchema)],
     OwnerMController.replaceOwnerM)
   .patch([validateParam(schemas.idSchema, 'ownermid'),
-    validateBody(schemas.ownerMOptionalSchema)],
+    validateBody(schemas.ownerOptionalSchema)],
     OwnerMController.updateOwnerM)
   .delete(validateParam(schemas.idSchema, 'ownermid'),
     OwnerMController.deleteOwnerM);

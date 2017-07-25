@@ -7,6 +7,7 @@ const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
 module.exports = {
 
   index: async (req, res, next) => {
+
     const owners = await OwnerP
       .query()
       .eager(req.query.eager)
@@ -16,9 +17,21 @@ module.exports = {
     res.status(200).json(owners);
   },
 
+  getOwnerP: async (req, res, next) => {
+    var ownerpid = req.value.params.ownerpid;
+
+    const owner = await OwnerP
+      .query()
+      .where('id', ownerpid)
+      .limit(1);
+
+    res.status(200).json(owner[0]);
+  },
+
   newOwnerP: async (req, res, next) => {
 
-    const newOwnerP = new OwnerP(req.value.body);
+    const newOwnerP = new OwnerP();
+
     newOwnerP.owner_code = req.value.body.owner_code;
     newOwnerP.owner = req.value.body.owner;
     newOwnerP.color = req.value.body.color;
@@ -28,31 +41,25 @@ module.exports = {
     .insert(newOwnerP)
     .into('owner')
     .returning('id');
-
     newOwnerP.id = owner_id;
+
     res.status(201).json(newOwnerP);
   },
 
-  getOwnerP: async (req, res, next) => {
-    var ownerpid = req.value.params.ownerpid;
-    const owner = await OwnerP
-      .query()
-      .where('id', ownerpid)
-      .limit(1);
-    res.status(200).json(owner[0]);
-  },
-
   deleteOwnerP: async (req, res, next) => {
-    var ownerpid = req.value.params.ownerpid;
+    const ownerpid = req.value.params.ownerpid;
+
     const owner = await OwnerP
       .query()
       .where('id', ownerpid)
       .limit(1)
       .del();
+
     res.status(200).json('success');
   },
 
   replaceOwnerP: async (req, res, next) => {
+
     const ownerpid = req.value.params.ownerpid;
 
     var owner = await OwnerP
@@ -76,6 +83,7 @@ module.exports = {
   },
 
   updateOwnerP: async (req, res, next) => {
+
     const ownerpid = req.value.params.ownerpid;
 
     var owner = await OwnerP
@@ -101,5 +109,4 @@ module.exports = {
 
     res.status(201).json(owner);
   }
-
 };

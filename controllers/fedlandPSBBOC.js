@@ -36,8 +36,6 @@ module.exports = {
           sql += " where owner_code = '" + owner_code + "' ";
           sql += " AND ST_SimplifyPreserveTopology(geom, " + simplification + ") && ST_MakeEnvelope(" + left_lng + ", " + bottom_lat + ", " + right_lng + ", " + top_lat + ", " + srid + "); ";
 
-    // console.log(sql);
-    
     const result = await knex.raw(sql);
     const fedlands = [];
     for(var feature in result.rows) {

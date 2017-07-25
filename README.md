@@ -395,21 +395,27 @@ The following list highlights key packages as part of the application and why th
 
 https://expressjs.com/
 
-Express.js is a popular web framework for Node.js that is minimal, flexible and feature rich. It allows the app to serve routes for the REST API and ultimately, the map to a client web browser. For example, here are the routes to serve all the fedlands data and fedlands for a specific owner_code. ([/routes/fedlandsP.js](https://github.com/FergusDevelopmentLLC/geodev-node-rest/blob/master/routes/fedlandsP.js))
-
-![](http://storage3.static.itmages.com/i/17/0725/h_1501007924_4975495_35ef084978.png)
+Express.js is a popular web framework for Node.js that is minimal, flexible and feature rich. It allows the app to serve routes for the REST API and ultimately, the map to a client web browser.
 
 ##### Knex
 
-Knex.js is a query builder for PostgreSQL/Node.js. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+Knex.js is a query builder for PostgreSQL/Node.js. Examples of its use can be seen in /controllers/ownerP.js where we write sql in code.
+
+![](http://storage8.static.itmages.com/i/17/0725/h_1501017256_3730053_e2f8de0195.png)
 
 ##### Mongoose
 
-Similarly, Mongoose.js is an object modeler for MongoDB/Node.js At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati.
+Similarly, Mongoose.js is an object modeler for MongoDB/Node.js.
+
+Here we see mongoose tracks in /controllers/ownersM.js.
+
+![](http://storage5.static.itmages.com/i/17/0725/h_1501017655_2277078_37dabaf5d3.png)
 
 ##### Joi
 
-Joi.js is a validator for JavaScript objects. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos.
+Joi.js is a validator for JavaScript objects. We can use it to validate requests to the REST API to stop potential sql injection.
+
+![](http://storage7.static.itmages.com/i/17/0725/h_1501018030_5720340_fed57ea77f.png)
 
 #### Populate PostgreSQL tables
 
@@ -653,3 +659,6 @@ Powerful HTTP client for testing web services. eos et accusamus et iusto odio di
 https://www.virtualbox.org/
 
 Oracle Virtual box is Virtual Machine software that can be used to install this stack.
+
+
+NODE_ENV=production node app.js

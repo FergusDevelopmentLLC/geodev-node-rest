@@ -8,16 +8,16 @@ module.exports = {
     });
   },
 
-  newOwnerM: async (req, res, next) => {
-    const newOwnerM = new OwnerM(req.value.body);
-    const ownerM = await newOwnerM.save();
-    res.status(201).json(ownerM);
-  },
-
   getOwnerM: async (req, res, next) => {
     const { ownermid } = req.value.params;
     const ownerM = await OwnerM.findById(ownermid);
     res.status(200).json(ownerM);
+  },
+
+  newOwnerM: async (req, res, next) => {
+    const newOwnerM = new OwnerM(req.value.body);
+    const ownerM = await newOwnerM.save();
+    res.status(201).json(ownerM);
   },
 
   deleteOwnerM: async (req, res, next) => {

@@ -4,15 +4,15 @@ const { validateParam, validateBody, schemas } = require('../helpers/routeHelper
 
 router.route('/')
   .get(OwnerPController.index)
-  .post(validateBody(schemas.ownerPSchema), OwnerPController.newOwnerP);
+  .post(validateBody(schemas.ownerSchema), OwnerPController.newOwnerP);
 
 router.route('/:ownerpid') // /ownersP/1
   .get(validateParam(schemas.idSchema, 'ownerpid'), OwnerPController.getOwnerP)
   .put([validateParam(schemas.idSchema, 'ownerpid'),
-    validateBody(schemas.ownerPSchema)],
+    validateBody(schemas.ownerSchema)],
     OwnerPController.replaceOwnerP)
   .patch([validateParam(schemas.idSchema, 'ownerpid'),
-    validateBody(schemas.ownerPOptionalSchema)],
+    validateBody(schemas.ownerOptionalSchema)],
     OwnerPController.updateOwnerP)
   .delete(validateParam(schemas.idSchema, 'ownerpid'),
     OwnerPController.deleteOwnerP);
