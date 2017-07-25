@@ -419,7 +419,7 @@ Joi.js is a validator for JavaScript objects. We can use it to validate requests
 
 #### Populate PostgreSQL tables
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos.
+The following steps create and populate fedlands geospatial data in the PostgreSQL tables.
 
 ##### Download Federal Lands shapefile
 ~~~~
@@ -469,6 +469,9 @@ $ logout
 Login in as geodevadmin.
 
 ##### Install Knex.js globally
+
+This will allow us to run knex.js database migrations.
+
 ~~~~
 geodevadmin $ cd app/geodev-node-rest
 $ npm install knex -g
@@ -476,7 +479,7 @@ $ npm install knex -g
 
 ##### Run knexjs migrate
 
-This will create the fedland and owner table in geodevdb.
+This will create knex.js aware tables in geodevdb database.
 ~~~~
 $ knex migrate:latest
 Using environment: development
@@ -511,7 +514,7 @@ from fedland_orig;
 
 #####  Populate fedland_postgis table from fedland_orig
 
-Create fedland_postgis table, this time don't convert the geom to geojson. Why? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos.
+Next we create fedland_postgis table and populate, this time don't convert the geom to geojson. This table will be used to support the POSTGIS route, using ST_SimplifyPreserveTopology and ST_MakeEnvelope.
 
 ~~~~
 geodevdb=#
@@ -549,7 +552,9 @@ INSERT INTO owner (owner_code, owner, color, orderby) VALUES ('PRI', 'State/Priv
 ~~~~
 
 ##### Update where owner_code is null to 'PRI'
-Why? Accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+
+Upon further inspection, the source data did not have an owner code for a number of polygons. These polygons are state/private owned. Here we update fedland and fedland_postgis for these polygons.
+
 ~~~~
 geodevdb=# update fedland set owner_code = 'PRI' where owner_code is null;
 UPDATE 22045
@@ -559,7 +564,7 @@ UPDATE 22045
 
 #### Populate MongoDB collections
 
-Basically we are going to export the PostgreSQL tables to csv and then import those csv files into MongoDB collections.
+From here we export the PostgreSQL tables just populated and creates to csv files and then import those csv files into MongoDB collections.
 
 ##### Export fedland table to csv
 ~~~~
@@ -590,7 +595,9 @@ $ mongoimport -d geodevdb -c fedlands --type csv --file /tmp/fedland.csv --heade
 ~~~~
 
 ##### Parse the geojson column in mongodb
-Why? Accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt.
+
+When the fedlands collection was imported from csv, it was put into the mongodb as a string. Here we parse the geojson property so that the property is a json object in MongoDB.
+
 ~~~~
 $ mongo
 > use geodevdb
