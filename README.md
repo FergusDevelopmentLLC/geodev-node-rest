@@ -6,6 +6,12 @@ Demo [map](http://104.236.16.91:8641/):
 
 ![http://104.236.16.91:8641/](http://storage6.static.itmages.com/i/17/0724/h_1500923403_9513361_eba9dd45f7.png)
 
+Data for map originates from 4 sources, and can be switched with the buttons in the legend.
+  * Static GeoJSON files
+  * Dynamic geospatial PostGIS query using ST_SimplifyPreserveTopology and ST_MakeEnvelope
+  * Non-dynamic PostgreSQL query for comparison to MongoDB
+  * Non-dynamic MongoDB query
+
 ![](http://storage9.static.itmages.com/i/17/0725/h_1500998724_1432167_ebce238242.png)
 
 ## Web Stack
@@ -51,9 +57,10 @@ Why Linux? Digital Ocean? At vero eos et accusamus et iusto odio dignissimos duc
 
 If you are using a virtual machine to build this stack, the following commands are useful in order to communicate to you virtual machine via SSH, and to see the final rendered map.
 
-https://www.virtualbox.org/wiki/VirtualBox
+Recommended VM software: https://www.virtualbox.org/wiki/VirtualBox
 
-Allows SSH connections to your virtual machine from your host on port 2222 (22 default SSH port).
+Allows SSH connections to your virtual machine from your host on port 2222 (22 default SSH port). http://127.0.0.1:18641 (on host) => http://127.0.0.1:8641 (on virtual machine).
+
 ~~~~
 VBoxManage modifyvm "geodev" --natpf1 "guestssh,tcp,,2222,,22"
 ~~~~
@@ -62,7 +69,6 @@ Allow browsing to map from host at the url: http://127.0.0.1:18641
 ~~~~
 VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
 ~~~~
-http://127.0.0.1:18641 (on host) => http://127.0.0.1:8641 (on virtual machine)
 
 #### Sudo user setup (geodevadmin)
 
@@ -79,7 +85,9 @@ $ sudo -i -u geodevadmin
 
 ### Backend
 
-Why GeoJSON vs. PostgreSQL vs. PostGIS vs. MongoDB? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+Why GeoJSON vs. PostgreSQL vs. PostGIS vs. MongoDB? Basically this was a good way to get experience with the different query methods and performance differences. The PostGIS query is interesting in that only the data for the current map bounds is sent to the map. Unfortunately, this requires a new query each time the map is zoomed or panned.
+
+Source: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-postgis-on-ubuntu-14-04
 
 #### Install PostgreSQL
 
@@ -96,7 +104,9 @@ $ sudo apt-get install postgis
 
 #### PostgreSQL database administration
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+The following steps are for configuring PostgreSQL. A new database role/user will be created, the geodevdb database will be created, the PostGIS extention will be created and the PostgreSQL server will be configured for PostGIS.
+
+Source:
 
 ##### Create geodevdb database and role/user
 
@@ -146,7 +156,9 @@ Enter the new value, or press ENTER for the default
 	Other []:
 Is the information correct? [Y/n]
 ~~~~
-Make geodevdb a sudoer
+
+Make geodevdb a sudo user on the system with full rights.
+
 ~~~~
 $ sudo usermod -aG sudo geodevdb
 ~~~~
@@ -184,6 +196,8 @@ random_page_cost = 2.0                  # same scale as above
 
 ##### Allow connections to geodevdb
 
+This will allow geodevdb password protected connections to the PostgreSQL server.
+
 ~~~~
 $ sudo nano /etc/postgresql/9.6/main/pg_hba.conf
 
@@ -194,6 +208,8 @@ $ sudo service postgresql restart
 ~~~~
 
 #### MongoDB
+
+Why MongoDB? I was interested in implementing a noSQL document database to see if there was any performance difference. MongoDB was easy to set up, populate and integrate into the project. It doesn't have the geospatial query capabilities that PostGIS has, but it does have intersection plus others: https://docs.mongodb.com/manual/reference/operator/query-geospatial/
 
 Install Mongodb.
 
@@ -494,7 +510,7 @@ geodevdb=# \dt
 --------+----------------------+-------+----------
  public | fedland              | table | geodevdb
  public | fedland_orig         | table | geodevdb
- public | fedland_v2           | table | geodevdb
+ public | fedland_postgis      | table | geodevdb
  public | knex_migrations      | table | geodevdb
  public | knex_migrations_lock | table | geodevdb
  public | owner                | table | geodevdb
@@ -590,8 +606,8 @@ At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praese
 ~~~~
 select id, ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom,simplification),geojson_digits) as geojson, owner, owner_code, name, state, state_fips
 from fedland_postgis
-where owner_code = owner_code'
-AND ST_SimplifyPreserveTopology(geom, " + simplification + ") && ST_MakeEnvelope(left_lng, bottom_lat, right_lng, top_lat, srid);
+where owner_code = owner_code
+AND ST_SimplifyPreserveTopology(geom, simplification) && ST_MakeEnvelope(left_lng, bottom_lat, right_lng, top_lat, srid);
 ~~~~
 
 ### Front end
