@@ -1,6 +1,6 @@
 ## Project Background
 
-The purpose of this project was to build a geospatial enabled web stack from Operating System to final web map. A goal was to touch as many modern frameworks as possible. In short, this project is primarily a REST api that serves complex GeoJSON polygons from various sources. The front-end of the application communicates with the REST API to get data and display on a Leaflet.js map. I wanted to compare performance between static GeoJSON files on the server, PostgreSQL/PostGIS queries and queries from MongoDB, a fast noSQL document database.
+The purpose of this project was to build a geospatial enabled web stack from Operating System to final web map. A goal was to touch as many modern frameworks as possible. In short, this project is primarily a REST API that serves complex GeoJSON polygons from various sources. The front-end of the application communicates with the REST API to get data and display on a Leaflet.js map using the Vue.js front end framework. I wanted to compare performance between static GeoJSON files on the server, PostgreSQL/PostGIS queries and queries from MongoDB, a fast noSQL document database.
 
 Demo [map](http://104.236.16.91:8641/):
 
