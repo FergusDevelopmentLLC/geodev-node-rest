@@ -45,8 +45,8 @@ Federal land geojson polygons can be shown/hidden by clicking the checkboxes. Th
     * [Note on PostGIS route](#note-on-postgis-route)
 * [Front End](#front-end)
   * [Vue.js](#vue) - Open-source progressive JavaScript framework for building user interfaces. [link](https://vuejs.org/)
-  * [Leaflet.js](#leaflet) - Leading open-source JavaScript library for mobile-friendly interactive maps. [link](http://leafletjs.com/)
   * [Bootstrap](#bootstrap) - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web. [link](http://getbootstrap.com/)
+  * [Leaflet.js](#leaflet) - Leading open-source JavaScript library for mobile-friendly interactive maps. [link](http://leafletjs.com/)
 * [Utilities](#utilities)
   * [Postman](#postman) - Powerful HTTP client for testing web services. [link](https://www.getpostman.com/)
   * [Oracle VirtualBox](#oracle-virtualbox) - Virtual Machine. [link](https://www.virtualbox.org/)
@@ -703,34 +703,48 @@ AND ST_SimplifyPreserveTopology(geom, simplification) && ST_MakeEnvelope(left_ln
 ~~~~
 
 ### Front End
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+
+The main focus of the front end was to get experience with Vue.js, a modern front end javascript framework. The excellent Leaflet.js mapping library was used along with Bootstrap for the data source buttons in the legend.
 
 #### Vue
 https://vuejs.org/
 
-Vue.js is open-source progressive JavaScript framework for building user interfaces.
+Vue.js is open-source progressive JavaScript framework for building user interfaces. It is said to have a less steep learning curve than competing platforms like Angular and React.js. The idea with Vue.js is that the variable, "app", only deals with the defined "app" html div element. Multiple Vue "apps" are controlled independently rather than manipulating the full html page DOM.
+
+Elements in the data property of the view instance are used to populate the html front end "app" div (owners and sources).
+
+![](http://storage2.static.itmages.com/i/17/0726/h_1501098039_6883719_414aaf99f0.png)
+
+Methods can be called on html events, like checkbox and radio button clicks (landsToggle, sourcesToggle).
+
+![](http://storage9.static.itmages.com/i/17/0726/h_1501098439_3013036_30ddc9ce80.png)
+
+Vue.js replaces the need for jQuery.
+
+#### Bootstrap
+
+http://getbootstrap.com/
+
+Bootstrap is a popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web. It was used in this project for the data source buttons.
+
+![](http://storage6.static.itmages.com/i/17/0726/h_1501098774_6628624_182ed8d3cb.png)
 
 #### Leaflet
+
 http://leafletjs.com/
 
 Leaflet.js is a leading open-source JavaScript library for mobile-friendly interactive maps.
 
-#### Bootstrap
-Bootstrap is a popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web](http://getbootstrap.com/)
-
 ### Utilities
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+Various useful utilities were used in this project.
 
-#### Postman
+##### Postman
 https://www.getpostman.com/
 
 Powerful HTTP client for testing web services. eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
 
-#### Oracle Virtualbox
+##### Oracle Virtualbox
 https://www.virtualbox.org/
 
 Oracle Virtual box is Virtual Machine software that can be used to install this stack.
-
-
-NODE_ENV=production node app.js
