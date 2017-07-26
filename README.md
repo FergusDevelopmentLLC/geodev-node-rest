@@ -8,13 +8,6 @@ Demo [map](http://104.236.16.91:8641/):
 
 Federal land geojson polygons can be shown/hidden by clicking the checkboxes. There are 4 data sources, which can be be switched with the buttons in the legend.
 
-  * GEOJSON static files on the web server
-  * POSTGRESQL queries (no PostGIS) for comparison to MongoDB
-  * MONGODB queries
-  * POSTGIS Geospatial queries
-    * ST_SimplifyPreserveTopology and ST_MakeEnvelope used
-    * Requires query on each map zoom/pan
-
 ![](http://storage9.static.itmages.com/i/17/0725/h_1500998724_1432167_ebce238242.png)
 
 ## Web Stack
