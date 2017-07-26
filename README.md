@@ -424,7 +424,10 @@ The following steps create and populate fedlands geospatial data in the PostgreS
 ##### Download Federal Lands shapefile
 ~~~~
 $ logout
-$ sudo -i -u geodevdb
+~~~~
+Login as geodevadmin
+~~~~
+geodevadmin $ sudo -i -u geodevdb
 $ cd ~
 $ mkdir download
 $ cd download
