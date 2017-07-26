@@ -4,11 +4,11 @@ The purpose of this project was to build a geospatial enabled web stack from Ope
 
 Demo [map](http://104.236.16.91:8641/):
 
-![http://104.236.16.91:8641/](http://storage6.static.itmages.com/i/17/0724/h_1500923403_9513361_eba9dd45f7.png)
+![http://104.236.16.91:8641/](http://storage3.static.itmages.com/i/17/0726/h_1501100447_2743785_c00ac6bb92.png)
 
 Federal land geojson polygons can be shown/hidden by clicking the checkboxes. There are 4 data sources, which can be be switched with the buttons in the legend.
 
-![](http://storage9.static.itmages.com/i/17/0725/h_1500998724_1432167_ebce238242.png)
+![](http://storage5.static.itmages.com/i/17/0726/h_1501100485_7273407_1d924959e1.png)
 
 ## Web Stack
 * [Operating System](#operating-system)
