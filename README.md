@@ -709,9 +709,9 @@ The main focus of the front end was to get experience with Vue.js, a modern fron
 #### Vue
 https://vuejs.org/
 
-Vue.js is open-source progressive JavaScript framework for building user interfaces. It is said to have a less steep learning curve than competing platforms like Angular and React.js. The idea with Vue.js is that the variable, "app", only deals with the defined "app" html div element. Multiple Vue "apps" are controlled independently rather than manipulating the full html page DOM.
+Vue.js is open-source progressive JavaScript framework for building user interfaces. I chose it because it is said to have a less steep learning curve than competing platforms like [Angular](https://angularjs.org/) and [React.js](https://facebook.github.io/react/). The idea with Vue.js is that the variable, "app", only deals with the defined "app" html div element. Multiple Vue "apps" are controlled independently rather than manipulating the full html page DOM.
 
-Elements in the data property of the view instance are used to populate the html front end "app" div (owners and sources).
+Elements in the data property of the Vue instance are used to populate the html front end "app" div (owners and sources).
 
 ![](http://storage2.static.itmages.com/i/17/0726/h_1501098039_6883719_414aaf99f0.png)
 
