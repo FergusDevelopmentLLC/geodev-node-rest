@@ -46,25 +46,9 @@ Federal land geojson polygons can be shown/hidden by clicking the checkboxes. Th
 
 Ubuntu Linux was chosen primarily because it is free and open source. The target production environment is a DigitalOcean Droplet server. https://www.digitalocean.com/products/compute/
 
-
 * Ubuntu 17.04 "Zesty Zapus"
 * https://help.ubuntu.com/community/Installation/MinimalCD
   * http://archive.ubuntu.com/ubuntu/dists/zesty/main/installer-amd64/current/images/netboot/mini.iso
-
-##### Virtual machine setup (optional)
-
-If you are using VirtualBox virtual machine to build this stack, the following commands are useful in order to communicate to you virtual machine via SSH from your host, and to browse to the final rendered map from your host. https://www.virtualbox.org/wiki/VirtualBox
-
-Allows SSH connections to your virtual machine from your host on port 2222 (22 default SSH port). http://127.0.0.1:18641 (on host) => http://127.0.0.1:8641 (on virtual machine).
-
-~~~~
-VBoxManage modifyvm "geodev" --natpf1 "guestssh,tcp,,2222,,22"
-~~~~
-
-Allow browsing to map from host at the url: http://127.0.0.1:18641
-~~~~
-VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
-~~~~
 
 #### Sudo user setup (geodevadmin)
 
@@ -739,3 +723,16 @@ Powerful HTTP client for testing web services. eos et accusamus et iusto odio di
 https://www.virtualbox.org/
 
 Oracle Virtual box is Virtual Machine software that can be used to install this stack.
+
+If you are using VirtualBox virtual machine to build this stack, the following commands are useful in order to communicate to you virtual machine via SSH from your host, and to browse to the final rendered map from your host. https://www.virtualbox.org/wiki/VirtualBox
+
+Allows SSH connections to your virtual machine from your host on port 2222 (22 default SSH port). http://127.0.0.1:18641 (on host) => http://127.0.0.1:8641 (on virtual machine).
+
+~~~~
+VBoxManage modifyvm "geodev" --natpf1 "guestssh,tcp,,2222,,22"
+~~~~
+
+Allow browsing to map from host at the url: http://127.0.0.1:18641
+~~~~
+VBoxManage modifyvm "geodev" --natpf1 "guesthttp,tcp,,18641,,8641"
+~~~~
