@@ -83,7 +83,7 @@ module.exports = {
       owner.orderby = req.value.body.orderby;
 
       const update = await knex('owner')
-        .where('id', ownerId)
+        .where('id', ownerpid)
         .update(owner)
         .limit(1);
 
@@ -116,7 +116,7 @@ module.exports = {
         owner.orderby = req.value.body.orderby;
 
       const update = await knex('owner')
-        .where('id', ownerId)
+        .where('id', ownerpid)
         .update(owner)
         .limit(1);
 

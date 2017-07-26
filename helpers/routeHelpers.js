@@ -38,23 +38,41 @@ module.exports = {
   },
 
   schemas: {
-    idSchema: Joi.object().keys ({
-      param: Joi.number().integer().min(1)
-    }),
-
     ownerCodeSchema: Joi.object().keys ({
       param: Joi.string().regex(/^[A-Z]{3,3}$/).required(),
     }),
 
-    ownerSchema: Joi.object().keys ({
+    pIdSchema: Joi.object().keys ({
+      param: Joi.number().integer().min(1)
+    }),
+
+    ownerPSchema: Joi.object().keys ({
       owner_code: Joi.string().regex(/^[A-Z]{3,3}$/).required(),
       owner: Joi.string().required(),
       color: Joi.string().required(),
+      orderby: Joi.number().integer().min(1).max(100).required()
+    }),
+
+    ownerPOptionalSchema: Joi.object().keys ({
+      owner_code: Joi.string().regex(/^[A-Z]{3,3}$/),
+      owner: Joi.string(),
+      color: Joi.string(),
       orderby: Joi.number().integer().min(1).max(100)
     }),
 
-    ownerOptionalSchema: Joi.object().keys ({
+    mIdSchema: Joi.object().keys ({
+      param: Joi.string()
+    }),
+
+    ownerMSchema: Joi.object().keys ({
       owner_code: Joi.string().regex(/^[A-Z]{3,3}$/).required(),
+      owner: Joi.string().required(),
+      color: Joi.string().required(),
+      orderby: Joi.number().integer().min(1).max(100).required()
+    }),
+
+    ownerMOptionalSchema: Joi.object().keys ({
+      owner_code: Joi.string().regex(/^[A-Z]{3,3}$/),
       owner: Joi.string(),
       color: Joi.string(),
       orderby: Joi.number().integer().min(1).max(100)

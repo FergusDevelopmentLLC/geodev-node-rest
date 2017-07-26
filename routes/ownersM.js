@@ -7,14 +7,14 @@ router.route('/')
   .post(validateBody(schemas.ownerMSchema), OwnerMController.newOwnerM);
 
 router.route('/:ownermid') // /ownersM/xyz
-  .get(validateParam(schemas.idSchema, 'ownermid'), OwnerMController.getOwnerM)
-  .put([validateParam(schemas.idSchema, 'ownermid'),
-    validateBody(schemas.ownerSchema)],
+  .get(validateParam(schemas.mIdSchema, 'ownermid'), OwnerMController.getOwnerM)
+  .put([validateParam(schemas.mIdSchema, 'ownermid'),
+    validateBody(schemas.ownerMSchema)],
     OwnerMController.replaceOwnerM)
-  .patch([validateParam(schemas.idSchema, 'ownermid'),
-    validateBody(schemas.ownerOptionalSchema)],
+  .patch([validateParam(schemas.mIdSchema, 'ownermid'),
+    validateBody(schemas.ownerMOptionalSchema)],
     OwnerMController.updateOwnerM)
-  .delete(validateParam(schemas.idSchema, 'ownermid'),
+  .delete(validateParam(schemas.mIdSchema, 'ownermid'),
     OwnerMController.deleteOwnerM);
 
 module.exports = router;

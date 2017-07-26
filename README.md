@@ -623,12 +623,35 @@ NODE_ENV=production node server.js
 
 At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
 
-API routes:
+##### API routes:
+
+###### Owners
 ~~~~
-/ownerP
-/ownerM
-/asdfsad/
+# Source DB is PostgreSQL
+GET  /ownersP - Returns all the PostgreSQL owners
+POST /ownersP - Creates a new PostgreSQL owner.
+  BODY: {"owner_code":"NPX","owner":"National Park Service","color":"#6B6558","orderby":10}
+GET  /ownersP/:ownerpid - Gets an owner by PostgreSQL owner id.
+PUT  /ownersP/:ownerpid - Replaces owner by PostgreSQL owner id.
+  BODY: {"id": 10,"owner_code":"NPS","owner":"National Park Service","color":"#6B6558","orderby": 10}
+PATCH  /ownersP/:ownerpid - Patches owner properties by PostgreSQL owner id.
+  BODY {"id": 10,"owner":"Nat'l Park Service"}
+DELETE /ownersP/:ownerpid - Deletes owner by PostgreSQL owner id.
 ~~~~
+~~~~
+# Source DB is MongoDB
+GET  /ownersM - Returns all the MongoDB owners
+POST /ownersM - Creates a new MongoDB owner.
+  BODY: {"owner_code":"NPX","owner":"National Park Service","color":"#6B6558","orderby":10}
+GET  /ownersM/:ownermid - Gets an owner by MongoDB owner id. /ownersM/5970fccc397ccfdc7b9e6ab4
+PUT  /ownersM/:ownermid - Replaces owner by MongoDB owner id.
+  BODY: {"id": "5978e0cce87ca67438a05eba","owner_code":"NPS","owner":"National Park Service","color":"#6B6558","orderby": 10}
+PATCH  /ownersM/:ownermid - Patches owner properties by MongoDB owner id.
+  BODY {"id": 10,"owner":"Nat'l Park Service"}
+DELETE /ownersM/:ownermid - Deletes owner by MongoDB owner id.
+~~~~
+###### Fedlands
+
 
 ##### PostGIS tricks
 
