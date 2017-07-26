@@ -8,8 +8,6 @@ Demo [map](http://104.236.16.91:8641/):
 
 Federal land geojson polygons can be shown/hidden by clicking the checkboxes. There are 4 data sources, which can be be switched with the buttons in the legend.
 
-![](http://storage5.static.itmages.com/i/17/0726/h_1501100485_7273407_1d924959e1.png)
-
 ## Web Stack
 * [Operating System](#operating-system)
   * Linux 17.04 minimal install
