@@ -9,11 +9,11 @@ Demo [map](http://104.236.16.91:8641/):
 Federal land geojson polygons can be shown/hidden by clicking the checkboxes. There are 4 data sources, which can be be switched with the buttons in the legend.
 
   * GEOJSON static files on the web server
+  * POSTGRESQL queries (no PostGIS) for comparison to MongoDB
+  * MONGODB queries
   * POSTGIS Geospatial queries
     * ST_SimplifyPreserveTopology and ST_MakeEnvelope used
     * Requires query on each map zoom/pan
-  * POSTGRESQL queries (no PostGIS) for comparison to MongoDB
-  * MONGODB queries
 
 ![](http://storage9.static.itmages.com/i/17/0725/h_1500998724_1432167_ebce238242.png)
 
@@ -39,9 +39,11 @@ Federal land geojson polygons can be shown/hidden by clicking the checkboxes. Th
       * [Joi.js](#joi) - Validator for JavaScript objects. [link](http://mongoosejs.com/)
   * [Populate PostgreSQL tables](#populate-postgresql-tables)
   * [Populate MongoDB collections](#populate-mongodb-collections)
-  * [REST api](#rest-api)
-    * [PostGIS route](#postgis-route)
-* [Front-end](#front-end)
+  * [REST API](#rest-api)
+    * [Owner routes](#owner-routes)
+    * [Fedlands routes](#fedlands-routes)
+    * [Note on PostGIS route](#note-on-postgis-route)
+* [Front End](#front-end)
   * [Vue.js](#vue) - Open-source progressive JavaScript framework for building user interfaces. [link](https://vuejs.org/)
   * [Leaflet.js](#leaflet) - Leading open-source JavaScript library for mobile-friendly interactive maps. [link](http://leafletjs.com/)
   * [Bootstrap](#bootstrap) - Popular HTML, CSS, and JS framework for developing responsive, mobile first projects on the web. [link](http://getbootstrap.com/)
@@ -399,11 +401,15 @@ Express.js is a popular web framework for Node.js that is minimal, flexible and 
 
 ##### Knex
 
+http://knexjs.org/
+
 Knex.js is a query builder for PostgreSQL/Node.js. Examples of its use can be seen in /controllers/ownerP.js where we write sql in code.
 
 ![](http://storage8.static.itmages.com/i/17/0725/h_1501017256_3730053_e2f8de0195.png)
 
 ##### Mongoose
+
+http://mongoosejs.com/
 
 Similarly, Mongoose.js is an object modeler for MongoDB/Node.js.
 
@@ -412,6 +418,8 @@ Here we see mongoose tracks in /controllers/ownersM.js.
 ![](http://storage5.static.itmages.com/i/17/0725/h_1501017655_2277078_37dabaf5d3.png)
 
 ##### Joi
+
+https://github.com/hapijs/joi
 
 Joi.js is a validator for JavaScript objects. We can use it to validate requests to the REST API to stop potential sql injection.
 
@@ -613,19 +621,24 @@ $ mongo
 
 #### REST API
 
-Start server
+The REST API in this project is based on this very good Youtube tutorial. Check it out for details. Knex.js was used instead of Mongoose for ownerP and fedlandP models.
+
+[REST API with NODE (Express & MongoDB)](https://www.youtube.com/embed/1XmwszKUNR8)
+![https://www.youtube.com/embed/1XmwszKUNR8](http://storage5.static.itmages.com/i/17/0726/h_1501096563_3479841_24f924e8d6.png)
+
+###### Start server and REST API
 ~~~~
 $ cd ~/app/geodev-node-rest
 $ node server.js
-or
-NODE_ENV=production node server.js
+
+# or to set the production flag
+$ NODE_ENV=production node server.js
 ~~~~
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+##### Owner routes
 
-##### API routes:
+NOTE: All methods that write/delete data are disabled if NODE_ENV=production is set when starting server.
 
-###### Owners
 ~~~~
 # Source DB is PostgreSQL
 GET  /ownersP - Returns all the PostgreSQL owners
@@ -645,17 +658,43 @@ POST /ownersM - Creates a new MongoDB owner.
   BODY: {"owner_code":"NPX","owner":"National Park Service","color":"#6B6558","orderby":10}
 GET  /ownersM/:ownermid - Gets an owner by MongoDB owner id. /ownersM/5970fccc397ccfdc7b9e6ab4
 PUT  /ownersM/:ownermid - Replaces owner by MongoDB owner id.
-  BODY: {"id": "5978e0cce87ca67438a05eba","owner_code":"NPS","owner":"National Park Service","color":"#6B6558","orderby": 10}
+  BODY: {"id": "597...eba","owner_code":"NPS","owner":"Nat'l Park Service","color":"#6B6558","orderby": 10}
 PATCH  /ownersM/:ownermid - Patches owner properties by MongoDB owner id.
-  BODY {"id": 10,"owner":"Nat'l Park Service"}
+  BODY: {"id": 10,"owner":"Nat'l Park Service"}
 DELETE /ownersM/:ownermid - Deletes owner by MongoDB owner id.
 ~~~~
-###### Fedlands
 
+##### Fedlands routes
+~~~~
+# Source DB is PostgreSQL
+GET  /fedlandsP - Returns all the PostgreSQL fedlands geojson
+GET  /fedlandsP/:owner_code - Returns all the PostgreSQL fedlands geojson for owner_code
+~~~~
 
-##### PostGIS tricks
+~~~~
+# Source DB is MongoDB
+GET  /fedlandsM - Returns all the MongoDB fedlands geojson
+GET  /fedlandsM/:owner_code - Returns all the MongoDB fedlands geojson for owner_code
+~~~~
 
-At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
+~~~~
+# Source DB is PostgreSQL
+POST  /fedlandsPSBBOC - Returns fedlands clipped and simplified using POSTGIS query
+  BODY: {
+          "owner_code":"NPS",
+          "left_lng":-165.498046875,
+          "bottom_lat":-1.1425024037061522,
+          "right_lng":-45.79101562500001,
+          "top_lat":64.9607663214987,
+          "simplification":1,
+          "geojson_digits":3,
+          "srid":4326
+        }
+~~~~
+
+##### Note on PostGIS route
+
+If the POSTGIS route is selected, the /fedlandsPSBBOC API is used. This method is called whenever the map is zoomed or panned. Here is the POSTGIS sql behind the method.
 ~~~~
 select id, ST_AsGeoJSON(ST_SimplifyPreserveTopology(geom,simplification),geojson_digits) as geojson, owner, owner_code, name, state, state_fips
 from fedland_postgis
@@ -663,7 +702,7 @@ where owner_code = owner_code
 AND ST_SimplifyPreserveTopology(geom, simplification) && ST_MakeEnvelope(left_lng, bottom_lat, right_lng, top_lat, srid);
 ~~~~
 
-### Front end
+### Front End
 At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident. At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.
 
 #### Vue
