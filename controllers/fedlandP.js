@@ -1,5 +1,4 @@
 const FedlandP = require('../models/fedlandP');
-
 const knexConfig = require('../knexfile.js');
 const Knex = require('knex');
 const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
@@ -29,8 +28,6 @@ module.exports = {
 };
 
 function getFeatureCollectionFor(coll) {
-
-  console.log(coll);
 
   var features = [];
 

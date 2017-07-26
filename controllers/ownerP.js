@@ -29,7 +29,7 @@ module.exports = {
   },
 
   newOwnerP: async (req, res, next) => {
-    if(process.env.NODE_ENV && process.env.NODE_ENV = 'production') {
+    if(process.env.NODE_ENV && process.env.NODE_ENV == 'production') {
       res.status(200).json('disabled');
     }
     else {
@@ -51,7 +51,7 @@ module.exports = {
   },
 
   deleteOwnerP: async (req, res, next) => {
-    if(process.env.NODE_ENV && process.env.NODE_ENV = 'production') {
+    if(process.env.NODE_ENV && process.env.NODE_ENV == 'production') {
       res.status(200).json('disabled');
     }
     else {
@@ -66,7 +66,7 @@ module.exports = {
   },
 
   replaceOwnerP: async (req, res, next) => {
-    if(process.env.NODE_ENV && process.env.NODE_ENV = 'production') {
+    if(process.env.NODE_ENV && process.env.NODE_ENV == 'production') {
       res.status(200).json('disabled');
     }
     else {
@@ -93,29 +93,34 @@ module.exports = {
 
   updateOwnerP: async (req, res, next) => {
 
-    const ownerpid = req.value.params.ownerpid;
+    if(process.env.NODE_ENV && process.env.NODE_ENV == 'production') {
+      res.status(200).json('disabled');
+    }
+    else {
+      const ownerpid = req.value.params.ownerpid;
 
-    var owner = await OwnerP
-      .query()
-      .where('id', ownerpid)
-      .limit(1);
+      var owner = await OwnerP
+        .query()
+        .where('id', ownerpid)
+        .limit(1);
 
-    owner = owner[0];
+      owner = owner[0];
 
-    if(req.value.body.owner_code)
-      owner.owner_code = req.value.body.owner_code;
-    if(req.value.body.owner)
-      owner.owner = req.value.body.owner;
-    if(req.value.body.color)
-      owner.color = req.value.body.color;
-    if(req.value.body.orderby)
-      owner.orderby = req.value.body.orderby;
+      if(req.value.body.owner_code)
+        owner.owner_code = req.value.body.owner_code;
+      if(req.value.body.owner)
+        owner.owner = req.value.body.owner;
+      if(req.value.body.color)
+        owner.color = req.value.body.color;
+      if(req.value.body.orderby)
+        owner.orderby = req.value.body.orderby;
 
-    const update = await knex('owner')
-      .where('id', ownerId)
-      .update(owner)
-      .limit(1);
+      const update = await knex('owner')
+        .where('id', ownerId)
+        .update(owner)
+        .limit(1);
 
-    res.status(201).json(owner);
+      res.status(201).json(owner);
+    }
   }
 };
