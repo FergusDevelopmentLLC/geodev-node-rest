@@ -39,7 +39,7 @@ module.exports = {
 
   schemas: {
     ownerCodeSchema: Joi.object().keys ({
-      param: Joi.string().regex(/^[A-Z]{3,3}$/).required(),
+      param: Joi.string().regex(/^[A-Z]{2,3}$/).required(),
     }),
 
     pIdSchema: Joi.object().keys ({
@@ -47,7 +47,7 @@ module.exports = {
     }),
 
     ownerPSchema: Joi.object().keys ({
-      owner_code: Joi.string().regex(/^[A-Z]{3,3}$/).required(),
+      owner_code: Joi.string().regex(/^[A-Z]{2,3}$/).required(),
       owner: Joi.string().required(),
       color: Joi.string().required(),
       orderby: Joi.number().integer().min(1).max(100).required()
@@ -65,7 +65,7 @@ module.exports = {
     }),
 
     ownerMSchema: Joi.object().keys ({
-      owner_code: Joi.string().regex(/^[A-Z]{3,3}$/).required(),
+      owner_code: Joi.string().regex(/^[A-Z]{2,3}$/).required(),
       owner: Joi.string().required(),
       color: Joi.string().required(),
       orderby: Joi.number().integer().min(1).max(100).required()
@@ -79,7 +79,7 @@ module.exports = {
     }),
 
     fedlandPSBBOCSchema: Joi.object().keys ({
-    	owner_code : Joi.string().regex(/^[A-Z]{3,3}$/).required(),
+    	owner_code : Joi.string().regex(/^[A-Z]{2,3}$/).required(),
     	left_lng : Joi.number().required(),
     	bottom_lat : Joi.number().required(),
     	right_lng : Joi.number().required(),

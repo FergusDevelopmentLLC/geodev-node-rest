@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
-    <script src="http://spin.js.org/spin.js"></script>
+    <!-- <script src="http://spin.js.org/spin.js"></script> -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
     <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Francois+One' rel='stylesheet' type='text/css'>
@@ -164,7 +164,7 @@
       }
     });
 
-    createSpinner();
+    //createSpinner();
 
     map.on("moveend", function () {
       if(app.currentsource == 'POSTGIS') {
@@ -175,19 +175,19 @@
     function getLayerGroupFor(owner_code, color) {
       var geoJsonUrl = getGeoJsonUrl(owner_code);
       var lg = new L.layerGroup();
-      document.getElementsByClassName('spinner')[0].style.display = 'block';
+      //document.getElementsByClassName('spinner')[0].style.display = 'block';
       if(app.currentsource == 'POSTGIS') {
         const simplification = getSimplication();
         const requestInfoObject = getRequestInfoObjectFor(owner_code, simplification);
         console.log(JSON.stringify(requestInfoObject));
         axios.post(geoJsonUrl, requestInfoObject).then(res => {
-          document.getElementsByClassName('spinner')[0].style.display = 'none';
+          //document.getElementsByClassName('spinner')[0].style.display = 'none';
           lg.addLayer(L.geoJson(res.data, { style: function(feature) { return {color: color, fillColor: color, stroke: true, strokefillOpacity: .4}; } }));
         });
       }
       else {
         axios.get(geoJsonUrl).then(res => {
-          document.getElementsByClassName('spinner')[0].style.display = 'none';
+          //document.getElementsByClassName('spinner')[0].style.display = 'none';
           lg.addLayer(L.geoJson(res.data, { style: function(feature) { return {color: color, fillColor: color, stroke: true, strokefillOpacity: .4}; } }));
         });
       };
