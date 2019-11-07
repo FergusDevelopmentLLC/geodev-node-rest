@@ -18,7 +18,7 @@
     "knex": "^0.12.0",
     "knex-postgis": "^0.2.2",
     "logger": "^0.0.1",
-    "mongoose": "^4.11.1",
+    "mongoose": ">=5.7.5",
     "morgan": "^1.8.2",
     "objection": "^0.8.0",
     "path": "^0.12.7",
