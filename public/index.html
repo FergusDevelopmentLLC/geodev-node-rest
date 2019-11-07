@@ -28,7 +28,7 @@
           z-index: 401;
           bottom: 20px;
           left: 20px;
-          width: 324px;
+          width: 265px;
           background-color: #fff;
           padding:10px;
           border-radius: 5px;
@@ -92,7 +92,7 @@
       data: {
         owners: '',
         ownersUrl: 'data/owners.json',
-        sources: ['GEOJSON','POSTGRES','MONGO','POSTGIS'],
+        sources: ['GEOJSON','POSTGRES','POSTGIS'],
         currentsource: 'GEOJSON'
       },
       methods: {
@@ -132,29 +132,29 @@
             this.ownersUrl = "data/owners.json";
             this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
-            this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
+            //this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
           else if (event.target.value == "POSTGIS") {
             this.currentsource = "POSTGIS";
             this.ownersUrl = "/ownersP";
             this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
-            this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
+            //this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
           else if (event.target.value == "POSTGRES") {
             this.currentsource = "POSTGRES";
             this.ownersUrl = "/ownersP";
             this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
             this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
-            this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
+            //this.$refs.MONGO[0].parentElement.setAttribute('class', 'btn btn-primary');
           }
-          else if (event.target.value == "MONGO") {
-            this.currentsource = "MONGO";
-            this.ownersUrl = "/ownersM";
-            this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
-            this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
-            this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
-          }
+          // else if (event.target.value == "MONGO") {
+          //   this.currentsource = "MONGO";
+          //   this.ownersUrl = "/ownersM";
+          //   this.$refs.GEOJSON[0].parentElement.setAttribute('class', 'btn btn-primary');
+          //   this.$refs.POSTGIS[0].parentElement.setAttribute('class', 'btn btn-primary');
+          //   this.$refs.POSTGRES[0].parentElement.setAttribute('class', 'btn btn-primary');
+          // }
           this.popOwners();
           clearMap();
         }

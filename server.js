@@ -12,9 +12,9 @@ const knexConfig = require('./knexfile');
 const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
 Model.knex(knex);
 
-const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/geodevdb');
+// const mongoose = require('mongoose');
+// mongoose.Promise = global.Promise;
+// mongoose.connect('mongodb://localhost/geodevdb');
 
 const app = express();
 
@@ -33,10 +33,10 @@ app.use('/fedlandsP', fedlandsP);
 const fedlandsPSBBOC = require('./routes/fedlandsPSBBOC');
 app.use('/fedlandsPSBBOC', fedlandsPSBBOC);
 
-const ownersM = require('./routes/ownersM');
-app.use('/ownersM', ownersM);
-const fedlandsM = require('./routes/fedlandsM');
-app.use('/fedlandsM', fedlandsM);
+// const ownersM = require('./routes/ownersM');
+// app.use('/ownersM', ownersM);
+// const fedlandsM = require('./routes/fedlandsM');
+// app.use('/fedlandsM', fedlandsM);
 
 // catch 404 and forward them to error handler
 app.use((req, res, next) => {
